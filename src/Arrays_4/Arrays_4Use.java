@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashSet;
 
 public class Arrays_4Use 
 {
@@ -162,7 +163,7 @@ public class Arrays_4Use
 	// method - 2
 	// TC => O(2*n) 
 	// SC => O(n+n)
-	public int lengthOfLongestSubstring2(String s) 
+	public static int lengthOfLongestSubstring2(String s) 
     {
         int n = s.length();
         if(n == 0)
@@ -209,6 +210,38 @@ public class Arrays_4Use
         return maxLen;
     }
 	
+	// optimal approach
+	// TC -> O(2*n)
+	// SC -> O(n)
+	public static int lengthOfLongestSubstring3(String s) 
+    {
+        int n = s.length();
+        if(n == 0)
+        {
+            return 0;
+        }
+
+        HashSet<Character> set = new HashSet<>();
+        int maxLen = 0;
+
+        int left = 0;
+        int right = 0;
+        while(right < n)
+        {
+            char c = s.charAt(right);
+            while(set.contains(c))
+            {
+                set.remove(s.charAt(left));
+                left++;
+            }
+            maxLen = Math.max(maxLen, right-left+1);
+            set.add(c);
+            right++;
+        }
+
+        
+        return maxLen;
+    }
 	
 	public static void main(String[] args) 
 	{
