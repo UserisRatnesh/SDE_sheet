@@ -2,6 +2,8 @@ package Arrays_4;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Arrays_4Use 
 {
@@ -69,7 +71,6 @@ public class Arrays_4Use
 	}
 	
 	
-	
 	// count the number of sub-array having sum equals k
 	// similar to finding sub-array having sum equals k
 	// update -> instead of storing index of sum-k, stores the number of times the sum has already appeared 
@@ -126,6 +127,86 @@ public class Arrays_4Use
             }
         }
         return ans;
+    }
+	
+	
+	// finding length of longest substring with non repeating character
+	// TC -> O(n^2 * 1 OR n) => 1 OR n depending upon .containsKey() method of map
+	public static int lengthOfLongestSubstring(String s) 
+    {
+        int n = s.length();
+        int maxLen = 0;
+        HashMap<Character, Integer> map = new HashMap<>();
+        for(int i=0; i<n; i++)
+        {
+            String substring = "";
+
+            for(int j=i; j<n; j++)
+            {
+                char c = s.charAt(j);
+                if(map.containsKey(c))
+                {
+                    break;
+                }
+                substring += c;
+                map.put(c, j);
+            }
+            maxLen = Math.max(maxLen, substring.length());
+            map.clear();
+        }
+
+        return maxLen;
+        
+    }
+	
+	// method - 2
+	// TC => O(2*n) 
+	// SC => O(n+n)
+	public int lengthOfLongestSubstring2(String s) 
+    {
+        int n = s.length();
+        if(n == 0)
+        {
+            return 0;
+        }
+
+        HashMap<Character, Integer> map = new HashMap<>();
+
+        int maxLen = 1;
+        String substr = ""+s.charAt(0);
+        map.put(s.charAt(0), 0);
+        for(int i=1; i<n; i++)
+        {
+            char c = s.charAt(i);
+            if(map.containsKey(c))
+            {
+                int indexOfCinSubstring = substr.indexOf(c);
+                substr = substr.substring(indexOfCinSubstring+1) + c;
+                int threshold = map.get(c);
+
+                // remove all characters stored in map present before c
+                // Collect keys to be removed
+                List<Character> keysToRemove = new ArrayList<>();
+                for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+                    if (entry.getValue() <= threshold) {
+                        keysToRemove.add(entry.getKey());
+                    }
+                }
+
+                // Remove elements based on collected keys
+                for (Character key : keysToRemove) {
+                    map.remove(key);
+                }
+            }
+            else
+            {
+                substr += c;
+            }
+            maxLen = Math.max(maxLen, substr.length());
+            map.put(c, i);
+        }
+
+        return maxLen;
     }
 	
 	
