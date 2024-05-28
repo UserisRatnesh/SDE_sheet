@@ -1,6 +1,6 @@
 package LinkedList_2;
 
-
+import java.util.Stack;
 
 class ListNode 
 {
@@ -11,6 +11,41 @@ class ListNode
 		next = null;
 	}
 }
+
+class Pair<F, S>
+{
+	private F first;
+	private S second;
+	
+	
+	public Pair(F first, S second)
+	{
+		this.first=  first;
+		this.second = second;
+	}
+	
+	public F getFirst()
+	{
+		return this.first;
+	}
+	
+	public S getSecond() 
+	{
+		return this.second;
+	}
+	
+	public void setFirst(F first)
+	{
+		this.first = first;
+	}
+	
+	public void setSecond(S second)
+	{
+		this.second = second;
+	}
+
+}
+
 
 public class LinkedList_2_use 
 {
@@ -90,6 +125,88 @@ public class LinkedList_2_use
         return a;
     }
     
+	
+	// TC = O(n)
+    // SC = O(K)
+
+    public static ListNode reverseKGroup(ListNode head, int k)
+    {
+        // find length of ll
+        int l = 0;
+        ListNode temp = head;
+        while(temp != null)
+        {
+            l++;
+            temp = temp.next;
+        }
+
+        int possibleReverse = l/k;
+        ListNode newHead = null;
+        ListNode tail = null;
+        while(possibleReverse > 0)
+        {
+            ListNode headToPass = tail == null ? head : tail.next;
+            Pair<ListNode, ListNode> pair = reverse(headToPass, k);
+            if(newHead == null)
+            {
+                newHead = pair.getFirst();
+                tail = pair.getSecond();
+            }
+            else{
+                tail.next = pair.getFirst();
+                tail = pair.getSecond();
+            }
+            possibleReverse--;
+        }
+
+        return newHead;
+    }
+    public static Pair<ListNode, ListNode> reverse(ListNode head, int k)
+    {
+        Stack<ListNode> stk = new Stack<>();
+
+        ListNode temp = head;
+
+        while( k > 0 && temp != null)
+        {
+            stk.push(temp);
+            temp = temp.next;
+            k--;
+        }
+
+        if(k > 0)
+        {
+            return new Pair<>(head, null);
+        }
+
+        // reverse the ll
+        ListNode end = temp;
+        
+        ListNode newHead = null;
+        temp = null;
+
+        while(!stk.isEmpty())
+        {
+            ListNode pop = stk.pop();
+            if(newHead == null)
+            {
+                newHead = pop;
+                temp = pop;
+            }
+            else
+            {
+                temp.next = pop;
+                temp = temp.next;
+            }
+        }
+
+        temp.next = end;
+
+        return new Pair<>(newHead, temp);
+
+    }
+
+
     
     
 	public static void main(String[] args)
