@@ -125,11 +125,59 @@ public class LinkedList_2_use
         return a;
     }
     
+	// TC = O(n/k * k) -> O(n)
+    // SC = O(k)
+	// using recursion
+    public ListNode reverseKGroup1(ListNode head, int k)
+    {
+        // reverse first k nodes
+        Stack<ListNode> stk = new Stack<>();
+        ListNode temp = head;
+        int tempK = k;
+        while(tempK != 0 && temp != null)
+        {
+            stk.push(temp);
+            temp = temp.next;
+            tempK--;
+        }
+
+        // it means the linked list does not have size equal to greater than k
+        if(tempK != 0 )
+        {
+            return head;
+        }
+
+        ListNode headToPassInrecursion = temp;
+
+        // reverse the linked list
+        ListNode newHead = null;
+        temp = null;
+
+        while(!stk.isEmpty())
+        {
+            ListNode pop = stk.pop();
+            if(newHead == null)
+            {
+                newHead = pop;
+                temp = pop;
+            }
+            else
+            {
+                temp.next = pop;
+                temp = temp.next;
+            }
+        }
+
+        // recursuve call
+        ListNode smallHead = reverseKGroup1(headToPassInrecursion, k);
+        temp.next = smallHead;
+
+        return newHead;
+    }
 	
 	// TC = O(n)
     // SC = O(K)
-
-    public static ListNode reverseKGroup(ListNode head, int k)
+    public static ListNode reverseKGroup2(ListNode head, int k)
     {
         // find length of ll
         int l = 0;
