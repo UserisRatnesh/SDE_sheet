@@ -290,7 +290,7 @@ public class LinkedList_2_use
 
     }
     
- // reverse LL
+ // reverse LL without recursion using three pointer
     private static ListNode reverse(ListNode head)
     {
         // Base case
