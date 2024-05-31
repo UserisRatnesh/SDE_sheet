@@ -253,6 +253,65 @@ public class LinkedList_2_use
         return new Pair<>(newHead, temp);
 
     }
+    
+    
+    public static boolean isPalindrome(ListNode head)
+    {
+        if(head == null)
+        {
+            return true;
+        }
+
+        
+        ListNode slow = head;
+        ListNode fast = head;
+        while(fast.next != null && fast.next.next != null)
+        {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // slow is now pointing to the first middle in even case
+
+        ListNode secondHead = reverse(slow.next);
+        ListNode temp = head;
+
+        while(secondHead != null)
+        {
+            if(temp.val != secondHead.val)
+            {
+                return false;
+            }
+            temp = temp.next;
+            secondHead = secondHead.next;
+        }
+
+        return true;
+
+    }
+    
+ // reverse LL
+    private static ListNode reverse(ListNode head)
+    {
+        // Base case
+        if(head == null || head.next == null)
+        {
+            return head;
+        }
+
+        ListNode temp = head;
+        ListNode prev = null;
+        ListNode nxt = null;
+        while(temp != null)
+        {
+            nxt = temp.next;
+            temp.next = prev;
+            prev = temp;
+            temp = nxt;
+        }
+
+        return prev;
+    }
 
 
     
