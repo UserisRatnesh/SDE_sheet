@@ -154,6 +154,54 @@ public class LinkedList_and_Arrays_use
     	return ans.next;
     }
     
+    // TC = O(n)
+    // SC = O(1)
+    public static int removeDuplicates(int[] nums) 
+    {
+        if (nums.length == 0) 
+        {
+            return 0;
+        }
+
+        int k = 1; // Initialize the unique elements count
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                // If the current element is different from the previous one
+                // Increment the unique elements count and update the next unique element
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+
+        return k;
+    }
+    
+    // TC = O(n)
+    // SC = O(1)
+    public static int findMaxConsecutiveOnes(int[] nums) 
+    {
+        int n = nums.length;
+
+        int ans = 0;
+        int l = 0;
+        int r = 0;
+        while(r < n)
+        {
+            if(nums[r] == 1)
+            {
+                ans = Math.max(ans, r-l+1);
+                r++;
+            }
+            else
+            {
+                l = r+1;
+                r++;
+            }
+        }
+        return ans;
+        
+    }
+    
 	public static void main(String[] args) 
 	{
 		
