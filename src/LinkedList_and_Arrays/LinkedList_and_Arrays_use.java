@@ -1,14 +1,16 @@
 package LinkedList_and_Arrays;
 
+import java.util.HashMap;
+
 class ListNode 
 {
 	int val;
 	ListNode next;
-	ListNode bottom;
+	ListNode random;
 	ListNode(int x) {
 		val = x;
 		next = null;
-		bottom = null;
+		random = null;
 	}
 }
 
@@ -18,7 +20,7 @@ public class LinkedList_and_Arrays_use
 	
 	// TC = O(n)
     // SC = O(1)
-    public ListNode rotateRight(ListNode head, int k) 
+    public static ListNode rotateRight(ListNode head, int k) 
     {
         if(head == null || head.next == null || k == 0)
         {
@@ -53,6 +55,53 @@ public class LinkedList_and_Arrays_use
         prev.next = null;
         return head;
         
+    }
+    
+    
+    private static ListNode deepCopyList(ListNode head)
+    {
+    	
+    	if(head == null)
+        {
+            return null;
+        }
+    	
+    	ListNode temp = head;
+    	ListNode newHead = new ListNode(0);
+    	ListNode ans = newHead;
+    	
+    	// Maintain the map for corresponding new nodes
+    	HashMap<ListNode, ListNode> correspondingNodes = new HashMap<>();
+    	
+    	while(temp != null)
+    	{
+    		ListNode newNode = new ListNode(temp.val);
+    		ans.next = newNode;
+    		ans = ans.next;
+    		
+    		// updating the corresponding nodes
+    		correspondingNodes.put(temp, newNode);
+
+    		// update the pointer
+    		temp = temp.next;
+    	}
+    	
+    	// iterate over new created node structure and update the random connection
+    	ListNode tempOld = head;
+    	ListNode tempNew = newHead.next;
+    	while(tempNew != null)
+    	{
+    		ListNode tempOldRandom = tempOld.random;
+    		ListNode corresponding = correspondingNodes.get(tempOldRandom);
+    		tempNew.random = corresponding;
+    		
+    		// update the pointers
+    		tempOld = tempOld.next;
+    		tempNew = tempNew.next;
+    	}
+    	
+
+    	return newHead.next;
     }
 
 	public static void main(String[] args) 
