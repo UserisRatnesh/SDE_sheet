@@ -58,7 +58,7 @@ public class LinkedList_and_Arrays_use
     }
     
     // TC = O(2n)
-    // SC = O(n) + internal O(n)
+    // SC = O(n) 
     private static ListNode deepCopyList(ListNode head)
     {
     	if(head == null)
@@ -104,8 +104,9 @@ public class LinkedList_and_Arrays_use
     	return newHead.next;
     }
 
-    
-    private static LisNode deepCopyListOptimal(ListNode head)
+    // TC = O(3n)
+    // SC = O(1)
+    private static ListNode deepCopyListOptimal(ListNode head)
     {
     	/*
     	 * 1. Iterate over the original list and create new node corresponding to each node
@@ -116,7 +117,41 @@ public class LinkedList_and_Arrays_use
     	 * 4. Now update the list to have only new nodes.
     	 */
     	
-    	return null;
+    	ListNode temp = head;
+    	
+    	// Inserted new nodes between older nodes
+    	while(temp != null)
+    	{
+    		ListNode newNode = new ListNode(temp.val);
+    		newNode.next = temp.next;
+    		temp.next = newNode;
+    		temp = newNode.next;
+    	}
+    	
+    	temp = head;
+    	while(temp != null)
+    	{
+    		// assign new node next to random next
+    		temp.next.random = temp.random == null ? null : temp.random.next;
+    		
+    		temp = temp.next.next;
+    	}
+    	
+    	
+    	// Extract the new node structure
+    	ListNode newHead = new ListNode(0);
+    	ListNode ans = newHead;
+    	temp = head;
+    	while(temp != null)
+    	{
+    		newHead.next = temp.next;
+    		newHead = newHead.next;
+    		temp.next = newHead.next;
+    		temp = temp.next;
+    	}
+    	
+    	
+    	return ans.next;
     }
     
 	public static void main(String[] args) 
