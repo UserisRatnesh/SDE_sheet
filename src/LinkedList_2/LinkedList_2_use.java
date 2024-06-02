@@ -6,9 +6,11 @@ class ListNode
 {
 	int val;
 	ListNode next;
+	ListNode bottom;
 	ListNode(int x) {
 		val = x;
 		next = null;
+		bottom = null;
 	}
 }
 
@@ -16,29 +18,29 @@ class Pair<F, S>
 {
 	private F first;
 	private S second;
-	
-	
+
+
 	public Pair(F first, S second)
 	{
 		this.first=  first;
 		this.second = second;
 	}
-	
+
 	public F getFirst()
 	{
 		return this.first;
 	}
-	
+
 	public S getSecond() 
 	{
 		return this.second;
 	}
-	
+
 	public void setFirst(F first)
 	{
 		this.first = first;
 	}
-	
+
 	public void setSecond(S second)
 	{
 		this.second = second;
@@ -49,273 +51,362 @@ class Pair<F, S>
 
 public class LinkedList_2_use 
 {
-	
+
 	// Both optimal 
 	// TC = O(2*n)
 	// SC  = O(1)
-	
+
 	public static ListNode getIntersectionNodeOptimal1(ListNode headA, ListNode headB) 
-    {
-        ListNode a = headA;
-        ListNode b = headB;
-        
-        // simultaneously iterate over both the ll
-        // if you reach the end of first ll then assign the temp1 equal to head of second ll and vice versa for second ll
-        while( a!=b)
-        {
-            a = a == null ? headB : a.next;
-            b = b == null ? headA : b.next;
-        }
+	{
+		ListNode a = headA;
+		ListNode b = headB;
 
-        return a;
-        
+		// simultaneously iterate over both the ll
+		// if you reach the end of first ll then assign the temp1 equal to head of second ll and vice versa for second ll
+		while( a!=b)
+		{
+			a = a == null ? headB : a.next;
+			b = b == null ? headA : b.next;
+		}
 
-    }
+		return a;
+
+
+	}
 	public static ListNode getIntersectionNodeOptimal2(ListNode headA, ListNode headB) 
-    {
-        ListNode a = headA;
-        ListNode b = headB;
-        
-        // find length of first ll
-        int l1 = 0;
-        while(a != null)
-        {
-            l1 ++;
-            a = a.next;
-        }
-        // find length of second ll
-        int l2 = 0;
-        while(b != null)
-        {
-            l2++;
-            b = b.next;
-        }
-        // find the difference 
-        int diff = Math.abs(l2 - l1);
+	{
+		ListNode a = headA;
+		ListNode b = headB;
 
-        // simultaneously iterate for the difference in sorter ll length
+		// find length of first ll
+		int l1 = 0;
+		while(a != null)
+		{
+			l1 ++;
+			a = a.next;
+		}
+		// find length of second ll
+		int l2 = 0;
+		while(b != null)
+		{
+			l2++;
+			b = b.next;
+		}
+		// find the difference 
+		int diff = Math.abs(l2 - l1);
 
-        a = headA;
-        b = headB;
-        if(l1 > l2)
-        {
-            while(diff > 0)
-            {
-                a = a.next;
-                diff--;
-            }
-        }
-        else
-        {
-            while(diff > 0)
-            {
-                b = b.next;
-                diff--;
-            }
-        }
+		// simultaneously iterate for the difference in sorter ll length
 
-        // now the difference have been travelled
-        // Now traverse simultaneously on both and will find the common one
-        while(a != b)
-        {
-            a = a.next;
-            b = b.next;
-        }
+		a = headA;
+		b = headB;
+		if(l1 > l2)
+		{
+			while(diff > 0)
+			{
+				a = a.next;
+				diff--;
+			}
+		}
+		else
+		{
+			while(diff > 0)
+			{
+				b = b.next;
+				diff--;
+			}
+		}
 
-        return a;
-    }
-    
+		// now the difference have been travelled
+		// Now traverse simultaneously on both and will find the common one
+		while(a != b)
+		{
+			a = a.next;
+			b = b.next;
+		}
+
+		return a;
+	}
+
 	// TC = O(n/k * k) -> O(n)
-    // SC = O(k)
+	// SC = O(k)
 	// using recursion
-    public ListNode reverseKGroup1(ListNode head, int k)
+	public ListNode reverseKGroup1(ListNode head, int k)
+	{
+		// reverse first k nodes
+		Stack<ListNode> stk = new Stack<>();
+		ListNode temp = head;
+		int tempK = k;
+		while(tempK != 0 && temp != null)
+		{
+			stk.push(temp);
+			temp = temp.next;
+			tempK--;
+		}
+
+		// it means the linked list does not have size equal to greater than k
+		if(tempK != 0 )
+		{
+			return head;
+		}
+
+		ListNode headToPassInrecursion = temp;
+
+		// reverse the linked list
+		ListNode newHead = null;
+		temp = null;
+
+		while(!stk.isEmpty())
+		{
+			ListNode pop = stk.pop();
+			if(newHead == null)
+			{
+				newHead = pop;
+				temp = pop;
+			}
+			else
+			{
+				temp.next = pop;
+				temp = temp.next;
+			}
+		}
+
+		// recursuve call
+		ListNode smallHead = reverseKGroup1(headToPassInrecursion, k);
+		temp.next = smallHead;
+
+		return newHead;
+	}
+
+	// TC = O(n)
+	// SC = O(K)
+	public static ListNode reverseKGroup2(ListNode head, int k)
+	{
+		// find length of ll
+		int l = 0;
+		ListNode temp = head;
+		while(temp != null)
+		{
+			l++;
+			temp = temp.next;
+		}
+
+		int possibleReverse = l/k;
+		ListNode newHead = null;
+		ListNode tail = null;
+		while(possibleReverse > 0)
+		{
+			ListNode headToPass = tail == null ? head : tail.next;
+			Pair<ListNode, ListNode> pair = reverse(headToPass, k);
+			if(newHead == null)
+			{
+				newHead = pair.getFirst();
+				tail = pair.getSecond();
+			}
+			else{
+				tail.next = pair.getFirst();
+				tail = pair.getSecond();
+			}
+			possibleReverse--;
+		}
+
+		return newHead;
+	}
+	public static Pair<ListNode, ListNode> reverse(ListNode head, int k)
+	{
+		Stack<ListNode> stk = new Stack<>();
+
+		ListNode temp = head;
+
+		while( k > 0 && temp != null)
+		{
+			stk.push(temp);
+			temp = temp.next;
+			k--;
+		}
+
+		if(k > 0)
+		{
+			return new Pair<>(head, null);
+		}
+
+		// reverse the ll
+		ListNode end = temp;
+
+		ListNode newHead = null;
+		temp = null;
+
+		while(!stk.isEmpty())
+		{
+			ListNode pop = stk.pop();
+			if(newHead == null)
+			{
+				newHead = pop;
+				temp = pop;
+			}
+			else
+			{
+				temp.next = pop;
+				temp = temp.next;
+			}
+		}
+
+		temp.next = end;
+
+		return new Pair<>(newHead, temp);
+
+	}
+
+
+	public static boolean isPalindrome(ListNode head)
+	{
+		if(head == null)
+		{
+			return true;
+		}
+
+
+		ListNode slow = head;
+		ListNode fast = head;
+		while(fast.next != null && fast.next.next != null)
+		{
+			slow = slow.next;
+			fast = fast.next.next;
+		}
+
+		// slow is now pointing to the first middle in even case
+
+		ListNode secondHead = reverse(slow.next);
+		ListNode temp = head;
+
+		while(secondHead != null)
+		{
+			if(temp.val != secondHead.val)
+			{
+				return false;
+			}
+			temp = temp.next;
+			secondHead = secondHead.next;
+		}
+
+		return true;
+
+	}
+
+	// reverse LL without recursion using three pointer
+	private static ListNode reverse(ListNode head)
+	{
+		// Base case
+		if(head == null || head.next == null)
+		{
+			return head;
+		}
+
+		ListNode temp = head;
+		ListNode prev = null;
+		ListNode nxt = null;
+		while(temp != null)
+		{
+			nxt = temp.next;
+			temp.next = prev;
+			prev = temp;
+			temp = nxt;
+		}
+
+		return prev;
+	}
+
+	//Find the starting point of the Loop of LinkedList
+	// using cycle detecting algorithm 
+	// floyd's cycle detectong algorithm
+	// TC = O(n)
+	// SC = O(1)
+	private static ListNode detectCycle(ListNode head) 
+	{
+		if(head == null || head.next == null)
+		{
+			return null;
+		}
+		ListNode s = head;
+		ListNode f = head;
+		ListNode temp = head;
+
+		while(f != null && f.next != null )
+		{
+			s = s.next;
+			f = f.next.next;
+
+			if(s == f)
+			{
+				while(temp != s)
+				{
+					temp = temp.next;
+					s = s.next;
+				}
+				return s;
+			}
+		}
+
+		// if cycle is not found
+		return null;
+	} 
+
+	
+	
+	//**** Flattening a linked list having bottom and next both pointer   ****//
+	// TC = O(k*n) => k = constant
+
+    private static ListNode flatten(ListNode root)
     {
-        // reverse first k nodes
-        Stack<ListNode> stk = new Stack<>();
-        ListNode temp = head;
-        int tempK = k;
-        while(tempK != 0 && temp != null)
+        if(root == null)
         {
-            stk.push(temp);
-            temp = temp.next;
-            tempK--;
+            return null;
         }
 
-        // it means the linked list does not have size equal to greater than k
-        if(tempK != 0 )
+        // lets assume that the list is sorted till 2nd list
+        ListNode smallHead = flatten(root.next);
+
+        // merger the small head list and root list
+        ListNode temp = root;
+
+        ListNode newHead = new ListNode(0);
+        ListNode t = newHead;
+
+        while(temp != null && smallHead != null)
         {
-            return head;
-        }
-
-        ListNode headToPassInrecursion = temp;
-
-        // reverse the linked list
-        ListNode newHead = null;
-        temp = null;
-
-        while(!stk.isEmpty())
-        {
-            ListNode pop = stk.pop();
-            if(newHead == null)
+            if(temp.val < smallHead.val)
             {
-                newHead = pop;
-                temp = pop;
+                t.bottom = temp;
+                t = t.bottom;
+                temp = temp.bottom;
             }
             else
             {
-                temp.next = pop;
-                temp = temp.next;
+                t.bottom = smallHead;
+                t = t.bottom;
+                smallHead = smallHead.bottom;
             }
         }
 
-        // recursuve call
-        ListNode smallHead = reverseKGroup1(headToPassInrecursion, k);
-        temp.next = smallHead;
+        // if any of the list has still bottom element left
+        while(temp != null)
+        {
+           t.bottom = temp;
+           t = t.bottom;
+           temp = temp.bottom;
+        }
 
-        return newHead;
+        while(smallHead != null)
+        {  
+            t.bottom = smallHead;
+            t = t.bottom;
+            smallHead = smallHead.bottom;
+        }
+
+        return newHead.bottom;
     }
 	
-	// TC = O(n)
-    // SC = O(K)
-    public static ListNode reverseKGroup2(ListNode head, int k)
-    {
-        // find length of ll
-        int l = 0;
-        ListNode temp = head;
-        while(temp != null)
-        {
-            l++;
-            temp = temp.next;
-        }
-
-        int possibleReverse = l/k;
-        ListNode newHead = null;
-        ListNode tail = null;
-        while(possibleReverse > 0)
-        {
-            ListNode headToPass = tail == null ? head : tail.next;
-            Pair<ListNode, ListNode> pair = reverse(headToPass, k);
-            if(newHead == null)
-            {
-                newHead = pair.getFirst();
-                tail = pair.getSecond();
-            }
-            else{
-                tail.next = pair.getFirst();
-                tail = pair.getSecond();
-            }
-            possibleReverse--;
-        }
-
-        return newHead;
-    }
-    public static Pair<ListNode, ListNode> reverse(ListNode head, int k)
-    {
-        Stack<ListNode> stk = new Stack<>();
-
-        ListNode temp = head;
-
-        while( k > 0 && temp != null)
-        {
-            stk.push(temp);
-            temp = temp.next;
-            k--;
-        }
-
-        if(k > 0)
-        {
-            return new Pair<>(head, null);
-        }
-
-        // reverse the ll
-        ListNode end = temp;
-        
-        ListNode newHead = null;
-        temp = null;
-
-        while(!stk.isEmpty())
-        {
-            ListNode pop = stk.pop();
-            if(newHead == null)
-            {
-                newHead = pop;
-                temp = pop;
-            }
-            else
-            {
-                temp.next = pop;
-                temp = temp.next;
-            }
-        }
-
-        temp.next = end;
-
-        return new Pair<>(newHead, temp);
-
-    }
-    
-    
-    public static boolean isPalindrome(ListNode head)
-    {
-        if(head == null)
-        {
-            return true;
-        }
-
-        
-        ListNode slow = head;
-        ListNode fast = head;
-        while(fast.next != null && fast.next.next != null)
-        {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-
-        // slow is now pointing to the first middle in even case
-
-        ListNode secondHead = reverse(slow.next);
-        ListNode temp = head;
-
-        while(secondHead != null)
-        {
-            if(temp.val != secondHead.val)
-            {
-                return false;
-            }
-            temp = temp.next;
-            secondHead = secondHead.next;
-        }
-
-        return true;
-
-    }
-    
- // reverse LL without recursion using three pointer
-    private static ListNode reverse(ListNode head)
-    {
-        // Base case
-        if(head == null || head.next == null)
-        {
-            return head;
-        }
-
-        ListNode temp = head;
-        ListNode prev = null;
-        ListNode nxt = null;
-        while(temp != null)
-        {
-            nxt = temp.next;
-            temp.next = prev;
-            prev = temp;
-            temp = nxt;
-        }
-
-        return prev;
-    }
 
 
-    
-    
 	public static void main(String[] args)
 	{
 
