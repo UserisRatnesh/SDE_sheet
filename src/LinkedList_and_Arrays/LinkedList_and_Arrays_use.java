@@ -57,10 +57,10 @@ public class LinkedList_and_Arrays_use
         
     }
     
-    
+    // TC = O(2n)
+    // SC = O(n) + internal O(n)
     private static ListNode deepCopyList(ListNode head)
     {
-    	
     	if(head == null)
         {
             return null;
@@ -73,7 +73,7 @@ public class LinkedList_and_Arrays_use
     	// Maintain the map for corresponding new nodes
     	HashMap<ListNode, ListNode> correspondingNodes = new HashMap<>();
     	
-    	while(temp != null)
+    	while(temp != null) // O(n)
     	{
     		ListNode newNode = new ListNode(temp.val);
     		ans.next = newNode;
@@ -89,10 +89,10 @@ public class LinkedList_and_Arrays_use
     	// iterate over new created node structure and update the random connection
     	ListNode tempOld = head;
     	ListNode tempNew = newHead.next;
-    	while(tempNew != null)
+    	while(tempNew != null) // O(n)
     	{
     		ListNode tempOldRandom = tempOld.random;
-    		ListNode corresponding = correspondingNodes.get(tempOldRandom);
+    		ListNode corresponding = correspondingNodes.get(tempOldRandom); // O(1)
     		tempNew.random = corresponding;
     		
     		// update the pointers
@@ -104,6 +104,21 @@ public class LinkedList_and_Arrays_use
     	return newHead.next;
     }
 
+    
+    private static LisNode deepCopyListOptimal(ListNode head)
+    {
+    	/*
+    	 * 1. Iterate over the original list and create new node corresponding to each node
+    	 * 		and store that node in between the nodes.
+    	 * 2. Now Iterate over the original list and find the node random pointer is pointing.
+    	 * 3. Now the next of the old node will be it's new node and 
+    	 * 		next of it's random node will be random node of new corresponding node.
+    	 * 4. Now update the list to have only new nodes.
+    	 */
+    	
+    	return null;
+    }
+    
 	public static void main(String[] args) 
 	{
 		
