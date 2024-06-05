@@ -6,6 +6,16 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.Comparator;
 
+class Job {
+  int id, profit, deadline;
+
+  public Job(int id, int profit, int deadline) {
+    this.id = id;
+    this.profit = profit;
+    this.deadline = deadline;
+  }
+}
+
 public class Greedy_use {
 
   // This is the brute force solution to find max
@@ -207,6 +217,43 @@ public class Greedy_use {
     }
 
     return maxPlatform;
+  }
+
+  private static int[] JobScheduling(Job arr[], int n) {
+
+    // we will go greedy
+    // will select job having early deadline since everyone is taking same one unit
+    // of time
+
+    // sort the jobs in increasing order of their deadline
+    // if deadline is same then keep the jobs having more profit
+    Arrays.sort(arr, new Comparator<Job>() {
+      public int compare(Job first, Job second) {
+        return second.profit - first.profit;
+      }
+    });
+
+    int[] jobeDoneDay = new int[n];
+
+    int jobsDone = 0;
+    int totalProfit = 0;
+    for (int i = 0; i < n; i++) {
+      Job job = arr[i];
+      int deadline = job.deadline - 1;
+      int temp = deadline;
+      while (temp >= 0 && jobeDoneDay[temp] != 0) {
+        temp--;
+      }
+
+      if (temp >= 0) {
+        // this job can not be done
+        jobeDoneDay[temp] = job.id;
+        totalProfit += job.profit;
+        jobsDone++;
+      }
+    }
+
+    return new int[] { jobsDone, totalProfit };
   }
 
   public static void main(String[] args) {
