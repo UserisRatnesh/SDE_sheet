@@ -2,11 +2,11 @@ package LinkedList_2;
 
 import java.util.Stack;
 
-class ListNode 
-{
+class ListNode {
 	int val;
 	ListNode next;
 	ListNode bottom;
+
 	ListNode(int x) {
 		val = x;
 		next = null;
@@ -14,103 +14,85 @@ class ListNode
 	}
 }
 
-class Pair<F, S>
-{
+class Pair<F, S> {
 	private F first;
 	private S second;
 
-
-	public Pair(F first, S second)
-	{
-		this.first=  first;
+	public Pair(F first, S second) {
+		this.first = first;
 		this.second = second;
 	}
 
-	public F getFirst()
-	{
+	public F getFirst() {
 		return this.first;
 	}
 
-	public S getSecond() 
-	{
+	public S getSecond() {
 		return this.second;
 	}
 
-	public void setFirst(F first)
-	{
+	public void setFirst(F first) {
 		this.first = first;
 	}
 
-	public void setSecond(S second)
-	{
+	public void setSecond(S second) {
 		this.second = second;
 	}
 
 }
 
+public class LinkedList_2_use {
 
-public class LinkedList_2_use 
-{
-
-	// Both optimal 
+	// Both optimal
 	// TC = O(2*n)
-	// SC  = O(1)
+	// SC = O(1)
 
-	public static ListNode getIntersectionNodeOptimal1(ListNode headA, ListNode headB) 
-	{
+	public static ListNode getIntersectionNodeOptimal1(ListNode headA, ListNode headB) {
 		ListNode a = headA;
 		ListNode b = headB;
 
 		// simultaneously iterate over both the ll
-		// if you reach the end of first ll then assign the temp1 equal to head of second ll and vice versa for second ll
-		while( a!=b)
-		{
+		// if you reach the end of first ll then assign the temp1 equal to head of
+		// second ll and vice versa for second ll
+		while (a != b) {
 			a = a == null ? headB : a.next;
 			b = b == null ? headA : b.next;
 		}
 
 		return a;
 
-
 	}
-	public static ListNode getIntersectionNodeOptimal2(ListNode headA, ListNode headB) 
-	{
+
+	public static ListNode getIntersectionNodeOptimal2(ListNode headA, ListNode headB) {
 		ListNode a = headA;
 		ListNode b = headB;
 
 		// find length of first ll
 		int l1 = 0;
-		while(a != null)
-		{
-			l1 ++;
+		while (a != null) {
+			l1++;
 			a = a.next;
 		}
 		// find length of second ll
 		int l2 = 0;
-		while(b != null)
-		{
+		while (b != null) {
 			l2++;
 			b = b.next;
 		}
-		// find the difference 
+		// find the difference
 		int diff = Math.abs(l2 - l1);
 
 		// simultaneously iterate for the difference in sorter ll length
 
 		a = headA;
 		b = headB;
-		if(l1 > l2)
-		{
-			while(diff > 0)
-			{
+		if (l1 > l2) {
+			while (diff > 0) {
 				a = a.next;
 				diff--;
 			}
-		}
-		else
-		{
-			while(diff > 0)
-			{
+		} else {
+			while (diff > 0) {
 				b = b.next;
 				diff--;
 			}
@@ -118,8 +100,7 @@ public class LinkedList_2_use
 
 		// now the difference have been travelled
 		// Now traverse simultaneously on both and will find the common one
-		while(a != b)
-		{
+		while (a != b) {
 			a = a.next;
 			b = b.next;
 		}
@@ -130,22 +111,19 @@ public class LinkedList_2_use
 	// TC = O(n/k * k) -> O(n)
 	// SC = O(k)
 	// using recursion
-	public ListNode reverseKGroup1(ListNode head, int k)
-	{
+	public ListNode reverseKGroup1(ListNode head, int k) {
 		// reverse first k nodes
 		Stack<ListNode> stk = new Stack<>();
 		ListNode temp = head;
 		int tempK = k;
-		while(tempK != 0 && temp != null)
-		{
+		while (tempK != 0 && temp != null) {
 			stk.push(temp);
 			temp = temp.next;
 			tempK--;
 		}
 
 		// it means the linked list does not have size equal to greater than k
-		if(tempK != 0 )
-		{
+		if (tempK != 0) {
 			return head;
 		}
 
@@ -155,16 +133,12 @@ public class LinkedList_2_use
 		ListNode newHead = null;
 		temp = null;
 
-		while(!stk.isEmpty())
-		{
+		while (!stk.isEmpty()) {
 			ListNode pop = stk.pop();
-			if(newHead == null)
-			{
+			if (newHead == null) {
 				newHead = pop;
 				temp = pop;
-			}
-			else
-			{
+			} else {
 				temp.next = pop;
 				temp = temp.next;
 			}
@@ -179,30 +153,25 @@ public class LinkedList_2_use
 
 	// TC = O(n)
 	// SC = O(K)
-	public static ListNode reverseKGroup2(ListNode head, int k)
-	{
+	public static ListNode reverseKGroup2(ListNode head, int k) {
 		// find length of ll
 		int l = 0;
 		ListNode temp = head;
-		while(temp != null)
-		{
+		while (temp != null) {
 			l++;
 			temp = temp.next;
 		}
 
-		int possibleReverse = l/k;
+		int possibleReverse = l / k;
 		ListNode newHead = null;
 		ListNode tail = null;
-		while(possibleReverse > 0)
-		{
+		while (possibleReverse > 0) {
 			ListNode headToPass = tail == null ? head : tail.next;
 			Pair<ListNode, ListNode> pair = reverse(headToPass, k);
-			if(newHead == null)
-			{
+			if (newHead == null) {
 				newHead = pair.getFirst();
 				tail = pair.getSecond();
-			}
-			else{
+			} else {
 				tail.next = pair.getFirst();
 				tail = pair.getSecond();
 			}
@@ -211,21 +180,19 @@ public class LinkedList_2_use
 
 		return newHead;
 	}
-	public static Pair<ListNode, ListNode> reverse(ListNode head, int k)
-	{
+
+	public static Pair<ListNode, ListNode> reverse(ListNode head, int k) {
 		Stack<ListNode> stk = new Stack<>();
 
 		ListNode temp = head;
 
-		while( k > 0 && temp != null)
-		{
+		while (k > 0 && temp != null) {
 			stk.push(temp);
 			temp = temp.next;
 			k--;
 		}
 
-		if(k > 0)
-		{
+		if (k > 0) {
 			return new Pair<>(head, null);
 		}
 
@@ -235,16 +202,12 @@ public class LinkedList_2_use
 		ListNode newHead = null;
 		temp = null;
 
-		while(!stk.isEmpty())
-		{
+		while (!stk.isEmpty()) {
 			ListNode pop = stk.pop();
-			if(newHead == null)
-			{
+			if (newHead == null) {
 				newHead = pop;
 				temp = pop;
-			}
-			else
-			{
+			} else {
 				temp.next = pop;
 				temp = temp.next;
 			}
@@ -256,19 +219,14 @@ public class LinkedList_2_use
 
 	}
 
-
-	public static boolean isPalindrome(ListNode head)
-	{
-		if(head == null)
-		{
+	public static boolean isPalindrome(ListNode head) {
+		if (head == null) {
 			return true;
 		}
 
-
 		ListNode slow = head;
 		ListNode fast = head;
-		while(fast.next != null && fast.next.next != null)
-		{
+		while (fast.next != null && fast.next.next != null) {
 			slow = slow.next;
 			fast = fast.next.next;
 		}
@@ -278,10 +236,8 @@ public class LinkedList_2_use
 		ListNode secondHead = reverse(slow.next);
 		ListNode temp = head;
 
-		while(secondHead != null)
-		{
-			if(temp.val != secondHead.val)
-			{
+		while (secondHead != null) {
+			if (temp.val != secondHead.val) {
 				return false;
 			}
 			temp = temp.next;
@@ -293,19 +249,16 @@ public class LinkedList_2_use
 	}
 
 	// reverse LL without recursion using three pointer
-	private static ListNode reverse(ListNode head)
-	{
+	private static ListNode reverse(ListNode head) {
 		// Base case
-		if(head == null || head.next == null)
-		{
+		if (head == null || head.next == null) {
 			return head;
 		}
 
 		ListNode temp = head;
 		ListNode prev = null;
 		ListNode nxt = null;
-		while(temp != null)
-		{
+		while (temp != null) {
 			nxt = temp.next;
 			temp.next = prev;
 			prev = temp;
@@ -315,30 +268,25 @@ public class LinkedList_2_use
 		return prev;
 	}
 
-	//Find the starting point of the Loop of LinkedList
-	// using cycle detecting algorithm 
+	// Find the starting point of the Loop of LinkedList
+	// using cycle detecting algorithm
 	// floyd's cycle detectong algorithm
 	// TC = O(n)
 	// SC = O(1)
-	private static ListNode detectCycle(ListNode head) 
-	{
-		if(head == null || head.next == null)
-		{
+	private static ListNode detectCycle(ListNode head) {
+		if (head == null || head.next == null) {
 			return null;
 		}
 		ListNode s = head;
 		ListNode f = head;
 		ListNode temp = head;
 
-		while(f != null && f.next != null )
-		{
+		while (f != null && f.next != null) {
 			s = s.next;
 			f = f.next.next;
 
-			if(s == f)
-			{
-				while(temp != s)
-				{
+			if (s == f) {
+				while (temp != s) {
 					temp = temp.next;
 					s = s.next;
 				}
@@ -348,67 +296,54 @@ public class LinkedList_2_use
 
 		// if cycle is not found
 		return null;
-	} 
+	}
 
-	
-	
-	//**** Flattening a linked list having bottom and next both pointer   ****//
+	// **** Flattening a linked list having bottom and next both pointer ****//
 	// TC = O(k*n) => k = constant
 
-    private static ListNode flatten(ListNode root)
-    {
-        if(root == null)
-        {
-            return null;
-        }
+	private static ListNode flatten(ListNode root) {
+		if (root == null) {
+			return null;
+		}
 
-        // lets assume that the list is sorted till 2nd list
-        ListNode smallHead = flatten(root.next);
+		// lets assume that the list is sorted till 2nd list
+		ListNode smallHead = flatten(root.next);
 
-        // merger the small head list and root list
-        ListNode temp = root;
+		// merger the small head list and root list
+		ListNode temp = root;
 
-        ListNode newHead = new ListNode(0);
-        ListNode t = newHead;
+		ListNode newHead = new ListNode(0);
+		ListNode t = newHead;
 
-        while(temp != null && smallHead != null)
-        {
-            if(temp.val < smallHead.val)
-            {
-                t.bottom = temp;
-                t = t.bottom;
-                temp = temp.bottom;
-            }
-            else
-            {
-                t.bottom = smallHead;
-                t = t.bottom;
-                smallHead = smallHead.bottom;
-            }
-        }
+		while (temp != null && smallHead != null) {
+			if (temp.val < smallHead.val) {
+				t.bottom = temp;
+				t = t.bottom;
+				temp = temp.bottom;
+			} else {
+				t.bottom = smallHead;
+				t = t.bottom;
+				smallHead = smallHead.bottom;
+			}
+		}
 
-        // if any of the list has still bottom element left
-        while(temp != null)
-        {
-           t.bottom = temp;
-           t = t.bottom;
-           temp = temp.bottom;
-        }
+		// if any of the list has still bottom element left
+		while (temp != null) {
+			t.bottom = temp;
+			t = t.bottom;
+			temp = temp.bottom;
+		}
 
-        while(smallHead != null)
-        {  
-            t.bottom = smallHead;
-            t = t.bottom;
-            smallHead = smallHead.bottom;
-        }
+		while (smallHead != null) {
+			t.bottom = smallHead;
+			t = t.bottom;
+			smallHead = smallHead.bottom;
+		}
 
-        return newHead.bottom;
-    }
-	
+		return newHead.bottom;
+	}
 
-
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 	}
 
