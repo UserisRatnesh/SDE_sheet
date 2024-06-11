@@ -2,6 +2,7 @@ package Recursion;
 
 import java.util.Arrays;
 import java.util.List;
+import java.security.KeyStore.PrivateKeyEntry;
 import java.util.ArrayList;
 
 public class Recursion_use {
@@ -124,7 +125,8 @@ public class Recursion_use {
 	// TC = O(2^n * k)
 	// SC = O(k*x) -> i.e x = number of combinations, k = avg. length of each
 	// combinations
-	private static void helper(int[] candidates, int i, int n, int target, List<Integer> list, List<List<Integer>> ans) {
+	private static void helper(int[] candidates, int i, int n, int target, List<Integer> list,
+			List<List<Integer>> ans) {
 		if (target == 0) {
 			ans.add(list);
 			return;
@@ -145,50 +147,42 @@ public class Recursion_use {
 		}
 
 	}
-	
-	
-	private static List<List<String>> palindromePartition(String s)
-	{
+
+	private static List<List<String>> palindromePartition(String s) {
 		List<List<String>> ans = new ArrayList<>();
 		List<String> list = new ArrayList<>();
 		int n = s.length();
-		
+
 		partitionHelper(s, 0, n, list, ans);
-		
+
 		return ans;
 	}
-	
-	private static void partitionHelper(String s, int index, int n, List<String> list, List<List<String>> ans)
-	{
+
+	private static void partitionHelper(String s, int index, int n, List<String> list, List<List<String>> ans) {
 		// Base case
-		if(index == n)
-		{
+		if (index == n) {
 			ans.add(list);
 			return;
 		}
-		
-		for(int i=index; i<n; i++)
-		{
-			// if the substring from index to i is palindrome them call the method after adding the substring to list
-			
-			if(isPalindrome(s.substring(index, i+1)))
-			{
+
+		for (int i = index; i < n; i++) {
+			// if the substring from index to i is palindrome them call the method after
+			// adding the substring to list
+
+			if (isPalindrome(s.substring(index, i + 1))) {
 				List<String> newList = new ArrayList<>(list);
-				newList.add(s.substring(index, i+1));
-				partitionHelper(s, i+1, n, newList, ans);
+				newList.add(s.substring(index, i + 1));
+				partitionHelper(s, i + 1, n, newList, ans);
 			}
 		}
 	}
-	
+
 	// TC = O(n/2)
-	private static boolean isPalindrome(String s)
-	{
+	private static boolean isPalindrome(String s) {
 		int l = 0;
-		int r = s.length()-1;
-		while(l<r)
-		{
-			if(s.charAt(l) != s.charAt(r))
-			{
+		int r = s.length() - 1;
+		while (l < r) {
+			if (s.charAt(l) != s.charAt(r)) {
 				return false;
 			}
 			l++;
@@ -196,12 +190,58 @@ public class Recursion_use {
 		}
 		return true;
 	}
+
 	
+	// TC = O(n^2)
+	// SC = O(n) for list used
+	private static String getKthPermutation(int n, int k) {
+
+		StringBuilder ans = new StringBuilder();
+		List<String> list = new ArrayList<>();
+		for (int i = 1; i <= n; i++) {
+			list.add(i + "");
+		}
+		kthPermutationHelper(list, n, k-1, ans);
+		return ans.toString();
+	}
 	
-	
-	public static void main(String[] args) 
-	{
-		System.out.println(palindromePartition("aabca"));
+	// TC = O(n^2) => 'n' recursive call + list.remove takes 'n' time complexity
+	private static void kthPermutationHelper(List<String> list, int n, int k, StringBuilder ans) {
+		if (k == 0) {
+			for(int i=0; i<list.size(); i++)
+            {
+                ans.append(list.get(i));
+            }
+			return;
+		}
+		
+		int fact = getFact(n-1);
+		int firstIndex = k / fact;
+		// find the first character
+		String first = list.get(firstIndex);
+
+		// remove this first from list
+		list.remove(firstIndex); 		// O(n)
+
+		// find the new k
+		int newK = k % fact;
+
+		// again call the method
+		kthPermutationHelper(list, n - 1, newK, ans.append(first));
+
+	}
+
+	private static int getFact(int n) {
+
+		if (n == 0) {
+			return 1;
+		}
+
+		return n * getFact(n - 1);
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getKthPermutation(4, 17));
 	}
 
 }
