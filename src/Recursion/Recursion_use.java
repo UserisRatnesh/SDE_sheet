@@ -239,9 +239,46 @@ public class Recursion_use {
 
 		return n * getFact(n - 1);
 	}
+	
+	
+	// kth permutation without recursion
+	// TC = O(n^2)
+    // SC = O(n)
+	private static String kthPer(int n, int k)
+	{
+		List<String> list = new ArrayList<>();
+		
+		int fact = 1;
+		for(int i=1; i<n; i++)
+		{
+			fact = fact*i;
+			list.add(i+"");
+		}
+		
+		list.add(n+"");
+		k = k-1; 
+		
+		StringBuilder sb = new StringBuilder();
+		while(k != 0) 
+		{
+			int index = k/fact;
+			String first = list.get(index);
+			list.remove(index);
+			sb.append(first);
+			k = k%fact;
+			fact = fact/(n-1);
+			n = n-1;
+			
+		}
+		for(int i=0; i<list.size(); i++)
+		{
+			sb.append(list.get(i));
+		}
+		return sb.toString();
+	}
 
 	public static void main(String[] args) {
-		System.out.println(getKthPermutation(4, 17));
+		System.out.println(kthPer(4,17));
 	}
 
 }
