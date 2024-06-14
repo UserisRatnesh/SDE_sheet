@@ -2,6 +2,7 @@ package Recursion_and_Backtracking;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Recursion_and_Backtracking_use 
 {
@@ -181,6 +182,69 @@ public class Recursion_and_Backtracking_use
 		return true;
 	}
 	
+	
+	// TC = O(n^2 * m^n) => one color has n options
+	// SC = O(n+m) extra memory
+	private static boolean graphColoring(boolean graph[][], int n, int e, int m)
+	{
+		if(m >= n)
+		{
+			return true;
+		}
+		
+		HashMap<Integer, Integer> colorMap = new HashMap<>();
+		
+		return graphColoringHelper(0, graph, n, e, m, colorMap);
+	}
+	
+	private static boolean graphColoringHelper(int node, boolean graph[][], int n, int e, int m, HashMap<Integer, Integer> colorMap)
+	{
+		
+		// base case
+		if(node == n)
+		{
+			return true;
+		}
+		
+		// iterate over padoshi of present node
+		// maintain colors used by padoshi 
+		// assign this node different color from its padodhi
+		// if no any color left then return false
+		
+		
+		boolean[] color = new boolean[m+1];
+		for(int i=0; i<n; i++)
+		{
+			if(i == node)
+			{
+				continue;
+			}
+			if(graph[node][i] && colorMap.containsKey(i))
+			{
+				color[colorMap.get(i)] = true;
+			}
+		}
+		
+		
+		for(int i=1; i<=m; i++)
+		{
+			if(color[i] == false)
+			{
+				// assign this color to present node
+				colorMap.put(node, i);
+				if(graphColoringHelper(node+1, graph, n, e, m, colorMap))
+				{
+					return true;
+				}
+				
+				colorMap.remove(node); // Backtrack
+			}
+		}
+		
+		
+		return false;
+		
+	}
 	
 	public static void main(String[] args) 
 	{
