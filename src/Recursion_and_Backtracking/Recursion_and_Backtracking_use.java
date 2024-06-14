@@ -41,14 +41,14 @@ public class Recursion_and_Backtracking_use
 	}
 
 	// TC = O(n! * n)
-	public List<List<String>> solveNQueens(int n) {
+	public static List<List<String>> solveNQueens(int n) {
 		int[][] board = new int[n][n];
 		List<List<String>> ans = new ArrayList<>();
 		placeQueens(n, 0, board, ans);
 		return ans;
 	}
 
-	private void placeQueens(int n, int row, int[][] board, List<List<String>> ans) {
+	private static void placeQueens(int n, int row, int[][] board, List<List<String>> ans) {
 		if (row == n) {
 			List<String> arrList = new ArrayList<>();
 			for (int[] arr : board) {
@@ -76,7 +76,7 @@ public class Recursion_and_Backtracking_use
 		}
 	}
 
-	private boolean isSafePlace(int n, int row, int col, int[][] board) {
+	private static boolean isSafePlace(int n, int row, int col, int[][] board) {
 		if (row >= n || row < 0 || col >= n || col < 0) {
 			return false;
 		}
@@ -105,9 +105,86 @@ public class Recursion_and_Backtracking_use
 		return true;
 	}
 
-	public static void main(String[] args) {
-		int[] nums = { 1, 2, 3 };
-		System.out.println(permute(nums));
+	
+	private static void solveSudoku(char[][] boards)
+	{
+		sudokuSolveHelper(boards, 0, 0);
+	}
+	
+	private static boolean sudokuSolveHelper(char[][] boards, int row, int col)
+	{
+		// if reached the 9th row 
+		if(row == 9)
+		{
+			return true;
+		}
+		
+		// if reached the last column
+		if(col == 9)
+		{
+			return sudokuSolveHelper(boards, row+1, 0);
+		}
+		
+		// if the given cell is filled
+		if(boards[row][col] != '.')
+		{
+			return sudokuSolveHelper(boards, row, col+1);
+		}
+		
+		
+		// try filling each value from 1 to 9
+		for(char c='1'; c<='9'; c++)
+		{
+			if(isPossibleToFill(c, boards, row, col))
+			{
+				boards[row][col] = c;
+				if(sudokuSolveHelper(boards, row, col+1))
+				{
+					return true;
+				}
+				boards[row][col] = '.'; // backtrack and check for next value of i
+			}
+		}
+		
+		return false;	
+	}
+	
+	private static boolean isPossibleToFill(char value, char[][] boards, int row, int col)
+	{
+		// if row or column out of range
+		if(row < 0 || row >= 9 || col < 0 || col >= 9)
+		{
+			return false;
+		}
+		
+		
+		for(int i=0; i<9; i++)
+		{
+			// check for particular row
+			if(boards[i][col] == value)
+			{
+				return false;
+			}
+			// check for column 
+			if(boards[row][i] == value)
+			{
+				return false;
+			}
+			
+			// check for small triangle
+			if(boards[3*(row/3) + i/3][3*(col/3) + i%3] == value)
+			{
+				return false;
+			}
+			
+		}
+		return true;
+	}
+	
+	
+	public static void main(String[] args) 
+	{
+		
 	}
 
 }
