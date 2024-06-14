@@ -1,8 +1,10 @@
 package Recursion_and_Backtracking;
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Recursion_and_Backtracking_use 
 {
@@ -315,6 +317,36 @@ public class Recursion_and_Backtracking_use
 		}
 		
 		
+	}
+	
+	
+	
+	private static ArrayList<String> wordBreak(String s, ArrayList<String> dictionary)
+	{
+		Set<String> mapDict = new HashSet<>(dictionary);
+		
+		ArrayList<String> ansList = new ArrayList<>();
+		wordBreakHelper(s, mapDict, ansList, "");
+		return ansList;
+	}
+	
+	private static void wordBreakHelper(String s, Set<String> mapDict, ArrayList<String> ansList, String ansString)
+	{
+		if(s.length() == 0)
+		{
+			ansList.add(ansString);
+			return;
+		}
+		
+		int l = s.length();
+		
+		for(int i=1; i<=l; i++)
+		{
+			if(mapDict.contains(s.substring(0, i))) 
+			{
+				wordBreakHelper(s.substring(i), mapDict, ansList, ansString+s.substring(0,i));
+			}
+		}
 	}
 	
 	
