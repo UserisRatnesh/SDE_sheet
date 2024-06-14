@@ -106,12 +106,14 @@ public class Recursion_and_Backtracking_use
 		return true;
 	}
 
-	
+
+	// TC = 
+	// SC = 
 	private static void solveSudoku(char[][] boards)
 	{
 		sudokuSolveHelper(boards, 0, 0);
 	}
-	
+
 	private static boolean sudokuSolveHelper(char[][] boards, int row, int col)
 	{
 		// if reached the 9th row 
@@ -119,20 +121,20 @@ public class Recursion_and_Backtracking_use
 		{
 			return true;
 		}
-		
+
 		// if reached the last column
 		if(col == 9)
 		{
 			return sudokuSolveHelper(boards, row+1, 0);
 		}
-		
+
 		// if the given cell is filled
 		if(boards[row][col] != '.')
 		{
 			return sudokuSolveHelper(boards, row, col+1);
 		}
-		
-		
+
+
 		// try filling each value from 1 to 9
 		for(char c='1'; c<='9'; c++)
 		{
@@ -146,10 +148,10 @@ public class Recursion_and_Backtracking_use
 				boards[row][col] = '.'; // backtrack and check for next value of i
 			}
 		}
-		
+
 		return false;	
 	}
-	
+
 	private static boolean isPossibleToFill(char value, char[][] boards, int row, int col)
 	{
 		// if row or column out of range
@@ -157,8 +159,8 @@ public class Recursion_and_Backtracking_use
 		{
 			return false;
 		}
-		
-		
+
+
 		for(int i=0; i<9; i++)
 		{
 			// check for particular row
@@ -171,18 +173,18 @@ public class Recursion_and_Backtracking_use
 			{
 				return false;
 			}
-			
+
 			// check for small triangle
 			if(boards[3*(row/3) + i/3][3*(col/3) + i%3] == value)
 			{
 				return false;
 			}
-			
+
 		}
 		return true;
 	}
-	
-	
+
+
 	// TC = O(n^2 * m^n) => one color has n options
 	// SC = O(n+m) extra memory
 	private static boolean graphColoring(boolean graph[][], int n, int e, int m)
@@ -191,27 +193,27 @@ public class Recursion_and_Backtracking_use
 		{
 			return true;
 		}
-		
+
 		HashMap<Integer, Integer> colorMap = new HashMap<>();
-		
+
 		return graphColoringHelper(0, graph, n, e, m, colorMap);
 	}
-	
+
 	private static boolean graphColoringHelper(int node, boolean graph[][], int n, int e, int m, HashMap<Integer, Integer> colorMap)
 	{
-		
+
 		// base case
 		if(node == n)
 		{
 			return true;
 		}
-		
+
 		// iterate over padoshi of present node
 		// maintain colors used by padoshi 
 		// assign this node different color from its padodhi
 		// if no any color left then return false
-		
-		
+
+
 		boolean[] color = new boolean[m+1];
 		for(int i=0; i<n; i++)
 		{
@@ -224,8 +226,8 @@ public class Recursion_and_Backtracking_use
 				color[colorMap.get(i)] = true;
 			}
 		}
-		
-		
+
+
 		for(int i=1; i<=m; i++)
 		{
 			if(color[i] == false)
@@ -236,19 +238,90 @@ public class Recursion_and_Backtracking_use
 				{
 					return true;
 				}
-				
+
 				colorMap.remove(node); // Backtrack
 			}
 		}
-		
-		
+
+
 		return false;
+
+	}
+
+	// TC = O(4^(n*n))
+	// SC = O(n^2 + n^2) => one for recursive stack used and other for pathTaken
+	public static ArrayList<String> findPathRatInMaze(int[][] m, int n) {
+        // Your code here
+        ArrayList<String> ansList = new ArrayList<>();
+        int[][] pathTaken = new int[n][n];
+        ratInMaze(0, 0, m, n, pathTaken, new StringBuilder(), ansList);
+        return ansList;
+    }
+
+	private static void ratInMaze(int row, int col, int[][] matrix, int n, int[][] pathTaken, StringBuilder ans, ArrayList<String> ansList)
+	{
+		// base case
+		if(row == n-1 && col == n-1)
+		{
+			ansList.add(ans.toString());
+			return;
+		}
+		
+		if(matrix[row][col] == 0) // pruning
+		{
+		    // path not possible
+		    return;
+		}
+		
+		
+		// left
+		if(col-1 >= 0 && matrix[row][col-1] == 1 && pathTaken[row][col] == 0)
+		{
+			ans.append("L");
+			pathTaken[row][col] = 1;
+			ratInMaze(row, col-1, matrix, n, pathTaken, ans, ansList);
+			pathTaken[row][col] = 0; // backtrack
+			ans.deleteCharAt(ans.length()-1); // backtrack in string 
+		}
+		
+		// right
+		if(col+1 < n && matrix[row][col+1] == 1 && pathTaken[row][col] == 0)
+		{
+			ans.append("R");
+			pathTaken[row][col] = 1;
+			ratInMaze(row, col+1, matrix, n, pathTaken, ans, ansList);
+			pathTaken[row][col] = 0; // backtrack
+			ans.deleteCharAt(ans.length()-1); // backtrack in string 
+		}
+		
+		// down
+		if(row+1 < n && matrix[row+1][col] == 1 && pathTaken[row][col] == 0)
+		{
+			ans.append("D");
+			pathTaken[row][col] = 1;
+			ratInMaze(row+1, col, matrix, n, pathTaken, ans, ansList);
+			pathTaken[row][col] = 0; // backtrack
+			ans.deleteCharAt(ans.length()-1); // backtrack in string 
+		}
+		
+		// up
+		if(row-1 >=0 && matrix[row-1][col] == 1 && pathTaken[row][col] == 0)
+		{
+			ans.append("U");
+			pathTaken[row][col] = 1;
+			ratInMaze(row-1, col, matrix, n, pathTaken, ans, ansList);
+			pathTaken[row][col] = 0; // backtrack
+			ans.deleteCharAt(ans.length()-1); // backtrack in string 
+		}
+		
 		
 	}
 	
+	
+
 	public static void main(String[] args) 
 	{
-		
+
 	}
 
 }
