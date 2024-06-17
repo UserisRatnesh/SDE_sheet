@@ -139,6 +139,21 @@ public class BinarySearchUse
 		
 		return ans;
 	}
+	
+	
+	// using xor operation
+	// TC = O(n)
+    public int singleNonDuplicate(int[] nums) 
+    {
+        int n = nums.length;
+        int xor = 0;
+
+        for(int i=0; i<n; i++)
+        {
+            xor = xor^nums[i];
+        }
+        return xor;
+    }
 
 	public static void main(String[] args)
 	{
