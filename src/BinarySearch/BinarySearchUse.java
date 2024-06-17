@@ -143,7 +143,7 @@ public class BinarySearchUse
 	
 	// using xor operation
 	// TC = O(n)
-    public int singleNonDuplicate(int[] nums) 
+    private static int singleNonDuplicate(int[] nums) 
     {
         int n = nums.length;
         int xor = 0;
@@ -153,6 +153,53 @@ public class BinarySearchUse
             xor = xor^nums[i];
         }
         return xor;
+    }
+    
+    
+    // TC = O(log n)
+    private static int singleNonDupOptimal(int[] nums)
+    {
+    	int n = nums.length;
+    	
+    	int l = 0;
+    	int r = n-2;
+    	
+    	while(l<=r)
+    	{
+    		int mid = (l+r)/2;
+    		
+    		if((mid & 1) == 1)
+    		{
+    			// means in right half, so go to left half.
+    			if(nums[mid+1] == nums[mid])
+        		{
+        			// decrease r
+        			r = mid-1;
+        		}
+    			else
+    			{
+    				// at left half
+    				l = mid+1;
+    			}
+    		}
+    		else
+    		{
+    			// means at left half
+    			if(nums[mid+1] == nums[mid])
+        		{
+        			// decrease r
+        			l = mid+1;
+        		}
+    			else
+    			{
+    				// at right half
+    				r = mid-1;
+    			}
+    		}
+
+    	}
+    	
+    	return nums[l];
     }
 
 	public static void main(String[] args)
