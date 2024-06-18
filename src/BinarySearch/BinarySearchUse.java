@@ -117,7 +117,7 @@ public class BinarySearchUse
 	}
 	
 	// TC = O(n)
-	private static int upperBound(int[] arr, int f)
+	private static int upperBound(int[] arr, int value)
 	{
 		int l = 0;
 		int r = arr.length-1;
@@ -126,7 +126,7 @@ public class BinarySearchUse
 		while(l<=r)
 		{
 			int mid = (l+r)/2;
-			if(arr[mid] > f)
+			if(arr[mid] > value)
 			{
 				ans = mid; // Maybe an answer
 				r = mid-1;
@@ -228,6 +228,57 @@ public class BinarySearchUse
     	
     	return nums[l];
     }
+    
+    
+    // TC = O(log n)
+    // SC = O(1)
+    // Search in sorted rotated array
+    private int search(int[] nums, int target) 
+    { 
+        int n = nums.length;
+        
+        int l = 0;
+        int r = n-1;
+        
+        while(l <= r)
+        {
+        	int mid = (l+r)/2;
+        	
+        	if(nums[mid] == target)	return mid;
+        	
+        	// if left half is sorted
+        	if(nums[l] <= nums[mid])
+        	{
+        		if(target >= nums[l] && target < nums[mid])
+        		{
+        			// target lies in left half
+        			r = mid-1;
+        		}
+        		else
+        		{
+        			// target lies in right half
+        			l = mid +1;
+        		}
+        	}
+        	
+        	// if right half is sorted
+        	else
+        	{
+        		if(target > nums[mid] && target <=  nums[r])
+        		{
+        			// target lies in right half
+        			l = mid +1;
+        		}
+        		else
+        		{
+        			r = mid -1;
+        		}
+        	}
+        }
+        
+        return -1;
+    }
+
     
     
     
