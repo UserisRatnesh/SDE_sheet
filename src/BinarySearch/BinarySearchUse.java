@@ -157,7 +157,7 @@ public class BinarySearchUse
     
     
     // TC = O(log n)
-    private static int singleNonDupOptimal(int[] nums)
+    private static int singleNonDupBetter(int[] nums)
     {
     	int n = nums.length;
     	
@@ -170,7 +170,7 @@ public class BinarySearchUse
     		
     		if((mid & 1) == 1)
     		{
-    			// means in right half, so go to left half.
+    			// means in right half, shrink the right half.
     			if(nums[mid+1] == nums[mid])
         		{
         			// decrease r
@@ -178,7 +178,7 @@ public class BinarySearchUse
         		}
     			else
     			{
-    				// at left half
+    				// at left half, shrink the left half
     				l = mid+1;
     			}
     		}
@@ -202,6 +202,35 @@ public class BinarySearchUse
     	return nums[l];
     }
 
+    // TC = O(log n)
+    public int singleNonDupOptimal(int[] nums) 
+    {
+        int n = nums.length;
+    	
+    	int l = 0;
+    	int r = n-2;
+    	
+    	while(l<=r)
+    	{
+    		int mid = (l+r) >> 1; // right shift one bit
+
+            if(nums[mid] == nums[mid^1])
+            {
+                // at left half so shrink it
+                l = mid + 1;
+            }
+            else
+            {
+                // at riht half so shrink it
+                r = mid - 1;
+            }
+    	}
+    	
+    	return nums[l];
+    }
+    
+    
+    
 	public static void main(String[] args)
 	{
 	}
