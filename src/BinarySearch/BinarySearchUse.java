@@ -500,13 +500,13 @@ public class BinarySearchUse
 			int mid = (low+high)/2;
 			
 			int s = countStudents(list, mid);
-			if(s <= students)
+			if(s > students)
 			{
-				high = mid-1;
+				low = mid+1;
 			}
 			else
 			{
-				low = mid+1;
+				high = mid-1;
 			}
 		}
 		
@@ -536,7 +536,60 @@ public class BinarySearchUse
 	}
 	
 	
+	// TC = O(n*log(n) + n*log(high-low))
+	// SC = O(1)
+	public static int aggressiveCows(int []stalls, int k) 
+	{
+		int n = stalls.length;
+		
+		if(k > n)	return -1; // This case not reachable since k <= n in question
+		
+		Arrays.sort(stalls);
+		int low = Integer.MAX_VALUE;
+		int high = stalls[n-1] - stalls[0];
+		
+		for(int i=0; i<n-1; i++)
+		{
+			low = Math.min(low,  stalls[i+1] - stalls[i]);
+		}
+		
+		while(low <= high)
+		{
+			int mid = (low + high)/2;
+			
+			int cows = countCows(stalls, mid, k);
+			
+			if(cows < k) 
+			{
+				high = mid-1;
+			}
+			else
+			{
+				low = mid+1;
+			}
+		}
+		
+		return high;
+    }
 	
+	private static int countCows(int[] stalls, int minDist, int k)
+	{
+		int n = stalls.length;
+		
+		int cows = 1;
+		int prevIndex = 0;
+		for(int i=1; i<n; i++)
+		{
+			int dist = stalls[i] - stalls[prevIndex];
+			if(dist >= minDist)
+			{
+				prevIndex = i;
+				cows++;
+			}
+		}
+		
+		return cows;
+	}
 	
 	public static void main(String[] args)
 	{
