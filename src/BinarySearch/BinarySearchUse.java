@@ -1,6 +1,7 @@
 package BinarySearch;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BinarySearchUse 
@@ -37,7 +38,7 @@ public class BinarySearchUse
 
 		return -1;
 	}
-
+	
 	// l = R*C
 	// TC = O(l*log(l))
 	// SC = O(l)
@@ -451,7 +452,8 @@ public class BinarySearchUse
 		// Ensure arr1 is the smaller array
 		if (m > n) return kthElement(arr2, arr1, n, m, k);
 
-		int low = Math.max(0, k - n), high = Math.min(k, m);
+		int low = Math.max(0, k - n); 
+		int high = Math.min(k, m);
 
 		while (low <= high) {
 			int mid1 = (low + high) / 2;
@@ -475,9 +477,77 @@ public class BinarySearchUse
 		return 0L;
 	}
 
+	
+	// TC = O(n * log(high-low))
+	// SC = O(1)
+	public static int books(ArrayList<Integer> list, int students) 
+	{
+		int n = list.size();
+		if(students > n)	return -1;
+		
+		// We have to minimize the maximum pages a student can hold
+		int low = 0;
+		int high = 0;
+		for(Integer x : list)
+		{
+			low = Math.max(x, low);
+			high += x;
+		}
+		
+		// Do binary search
+		while(low <= high)
+		{
+			int mid = (low+high)/2;
+			
+			int s = countStudents(list, mid);
+			if(s <= students)
+			{
+				high = mid-1;
+			}
+			else
+			{
+				low = mid+1;
+			}
+		}
+		
+		return low;
+		
+    }
+	
+	private static int countStudents(ArrayList<Integer> list, int  maxPages)
+	{
+		int n = list.size();
+		
+		int pages = 0;
+		int s = 1;
+		
+		for(int i=0; i<n; i++)
+		{
+			pages += list.get(i);
+			if(pages > maxPages)
+			{
+				pages = list.get(i);
+				s++;
+			}
+		}
+		
+		return s;
+		
+	}
+	
+	
+	
+	
 	public static void main(String[] args)
 	{
+		ArrayList<Integer> list = new ArrayList<>();
+		int[] arr = {97, 26, 12, 67, 10, 33, 79, 49, 79, 21, 67, 72, 93, 36, 85, 45, 28, 91, 94, 57, 1, 53, 8, 44, 68, 90, 24 };
+		for(int i=0; i<arr.length; i++)
+		{
+			list.add(arr[i]);
+		}
 		
+		System.out.println(books(list, 26));
 	}
 
 }
