@@ -265,6 +265,39 @@ public class LinkedList_and_Arrays_use {
 
     return trappedWater;
   }
+  
+  // TC = O(n)
+  // SC = O(n)
+  public static int trapRainwater(int[] arr) {
+      int n = arr.length;
+      int left = 0;
+      int ans = 0;
+
+      int[] rightMax = new int[n];
+      for (int i = n - 1; i >= 0; i--) {
+          if (i == n - 1) {
+              rightMax[i] = arr[i];
+              continue;
+          }
+          rightMax[i] = Math.max(rightMax[i + 1], arr[i]);
+      }
+
+      int leftMax = arr[left];
+
+      while (left < n - 1) {
+          if (arr[left] >= leftMax) {
+              // update left max
+              leftMax = arr[left];
+          } else {
+              // contains water
+              if (arr[left] < rightMax[left + 1]) {
+                  ans += Math.min(leftMax, rightMax[left + 1]) - arr[left];
+              }
+          }
+          left++;
+      }
+      return ans;
+  }
 
   // Fractional knapsack
   // Below code if item breaking is not allowed
