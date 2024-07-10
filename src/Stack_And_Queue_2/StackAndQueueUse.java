@@ -147,6 +147,39 @@ public class StackAndQueueUse
         
         return ans;
     }
+	
+	// TC = O(n^2)
+	// SC = O(1)
+	// Giving TLE
+	public static int largestRectangleArea(int[] arr) {
+        int n = arr.length;
+        int ans = 0;
+
+        for (int i = 0; i < n; i++) {
+            int h = arr[i];
+
+            int width = 1;
+            int j = i;
+            for (j = i + 1; j < n; j++) {
+                if (arr[j] < h) {
+                    break;
+                }
+                width++;
+            }
+
+            for (j = i - 1; j >= 0; j--) {
+                if (arr[j] < h) {
+                    break;
+                }
+                width++;
+            }
+
+            ans = Math.max(ans, h * width);
+
+        }
+
+        return ans;
+    }
 
 	public static void main(String[] args) 
 	{
