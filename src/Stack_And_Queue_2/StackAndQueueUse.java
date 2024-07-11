@@ -1,6 +1,8 @@
 package Stack_And_Queue_2;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -119,6 +121,49 @@ class LFUCache {
             node.next.prev = node;
             node.prev = head;
         }
+    }
+}
+
+class Pair {
+    int first;
+    int second;
+
+    public Pair(int first, int second) {
+        this.first = first;
+        this.second = second;
+    }
+}
+
+// TC = O(1)
+// SC = O(2*n)
+class MinStack {
+    Stack<Pair> stk;
+
+    public MinStack() {
+        this.stk = new Stack<>();
+    }
+
+    // Add to treemap takes log(n) time
+    public void push(int val) {
+        if (stk.isEmpty()) {
+            stk.push(new Pair(val, val));
+        } else {
+            int min = Math.min(stk.peek().second, val);
+            stk.push(new Pair(val, min));
+        }
+    }
+
+    // Remove from treemap takes log(n) time
+    public void pop() {
+        stk.pop();
+    }
+
+    public int top() {
+        return stk.peek().first;
+    }
+
+    public int getMin() {
+        return stk.peek().second;
     }
 }
 
@@ -245,7 +290,116 @@ public class StackAndQueueUse
 
         return ans;
     }
+    
+    
+    // TC = O(n*k)
+    // SC = O(n-k+1)
+    // Giving TLE
+    public static int[] maxSlidingWindow(int[] nums, int k) 
+    {
+        int n = nums.length;
+        int[] ans = new int[n - k + 1];
+        int index = 0;
 
+        for (int i = 0; i <= n - k; i++) {
+            int max = Integer.MIN_VALUE;
+            for (int j = i; j < i + k; j++) {
+                max = Math.max(max, nums[j]);
+            }
+
+            ans[index++] = max;
+        }
+
+        return ans;
+    }
+    
+    // TC = O(n*k), In a worst case, But in best case it can be O(n)
+    // SC = O(n-k+1)
+    public int[] maxSlidingWindow1(int[] nums, int k) 
+    {
+        int n = nums.length;
+        int left = 0;
+        int right = 0;
+        int[] ans = new int[n - k + 1];
+        int index = 0;
+
+        int maxIndex = -1;
+        int maxElement = Integer.MIN_VALUE;
+
+        while (right < k) {
+            if (nums[right] >= maxElement) {
+                maxElement = nums[right];
+                maxIndex = right;
+            }
+            right++;
+        }
+
+        ans[index++] = maxElement;
+
+        while (right < n) {
+            left++;
+            if (maxIndex <= right && maxIndex >= left) {
+                if (nums[right] >= maxElement) {
+                    ans[index++] = nums[right];
+                    maxIndex = right;
+                    maxElement = nums[right];
+                }
+                else
+                {
+                    ans[index++] = maxElement;
+                }
+            } else {
+                int currMax = Integer.MIN_VALUE;
+                for (int i = left; i <= right; i++) {
+                    if (currMax <= nums[i]) {
+                        maxIndex = i;
+                        currMax = nums[i];
+                    }
+                }
+                maxElement = currMax;
+                ans[index++] = maxElement;
+            }
+            right++;
+        }
+
+        return ans;
+    }
+
+    // TC = O(2*n) => since over all iterations included you are removing at most n
+    // elements
+    // SC = O(n-k+1) +(K) => for dequeue
+    public static int[] maxSlidingWindowOptimal(int[] nums, int k) {
+
+        int n = nums.length;
+        int[] ans = new int[n - k + 1];
+        int index = 0;
+
+        // Store the indices such that their values are in strictly decreasing order
+        Deque<Integer> dq = new ArrayDeque<>();
+
+        for (int i = 0; i < n; i++) {
+
+            // Removing the extra indices
+            // At max it will remove only one element since we are increasing single element
+            // every time
+            if (!dq.isEmpty() && dq.peekFirst() == i - k)
+                dq.removeFirst();
+
+            // Removing the unwanted indices with smaller values
+            while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i]) {
+                dq.removeLast();
+            }
+
+            dq.addLast(i);
+            if (i >= k - 1)
+                ans[index++] = nums[dq.peekFirst()];
+        }
+
+        return ans;
+    }
+    
+    
+    
 	public static void main(String[] args) 
 	{
 
