@@ -180,6 +180,71 @@ public class StackAndQueueUse
 
         return ans;
     }
+	
+	// TC = O(3*n)
+	// SC = O(3*n)
+	public static int largestRectangleAreaBetter(int[] arr) {
+        int n = arr.length;
+        int ans = 0;
+
+        Stack<Integer> stk = new Stack<>();
+        int[] leftSmallIndex = new int[n];
+        int[] rightSmallIndex = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            while (!stk.isEmpty() && arr[stk.peek()] >= arr[i]) {
+                stk.pop();
+            }
+            if (stk.isEmpty()) {
+                leftSmallIndex[i] = 0;
+            } else {
+                leftSmallIndex[i] = stk.peek() + 1;
+            }
+            stk.push(i);
+        }
+
+        stk.clear();
+        for (int i = n - 1; i >= 0; i--) {
+            while (!stk.isEmpty() && arr[stk.peek()] >= arr[i]) {
+                stk.pop();
+            }
+            if (stk.isEmpty()) {
+                rightSmallIndex[i] = n - 1;
+            } else {
+                rightSmallIndex[i] = stk.peek() - 1;
+            }
+            stk.push(i);
+        }
+
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, (rightSmallIndex[i] - leftSmallIndex[i] + 1) * arr[i]);
+        }
+
+        return ans;
+
+    }
+	
+	// TC = O(2*n)
+    // SC = O(n)
+    public static int largestRectangleAreaOptimal(int[] arr) {
+        int n = arr.length;
+        int ans = 0;
+
+        Stack<Integer> stk = new Stack<>();
+
+        for (int i = 0; i <= n; i++) {
+            int curr = i == n ? Integer.MIN_VALUE : arr[i];
+            while (!stk.isEmpty() && curr < arr[stk.peek()]) {
+                int h = arr[stk.pop()];
+                int rightSmall = i;
+                int leftSmall = stk.isEmpty() ? -1 : stk.peek();
+                ans = Math.max(ans, (rightSmall - leftSmall - 1) * h);
+            }
+            stk.push(i);
+        }
+
+        return ans;
+    }
 
 	public static void main(String[] args) 
 	{
