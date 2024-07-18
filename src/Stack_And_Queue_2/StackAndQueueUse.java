@@ -167,6 +167,73 @@ class MinStack {
     }
 }
 
+class MinStackBetter {
+    Stack<Long> stk;
+    Long min;
+
+    public MinStackBetter() {
+        this.stk = new Stack<>();
+        this.min = Long.MAX_VALUE;
+    }
+
+    // Add to treemap takes log(n) time
+    public void push(int value) {
+        Long val = Long.valueOf(value);
+        if(stk.isEmpty())
+        {
+            stk.push(val);
+            min = val;
+        }
+        else
+        {
+            if(val < min)
+            {
+                Long topush = 2*val - min;
+                stk.push(topush);
+                min = val;
+            }
+            else {
+                stk.push(val);
+            }
+        }
+    }
+
+
+    public void pop() {
+        if(stk.isEmpty())
+        {
+            return ;
+        }
+
+        Long val = stk.pop();
+        if(val < min)
+        {
+            // update the min
+            min = 2*min - val;
+        }
+    }
+
+    public int top() {
+        if(stk.isEmpty())
+        {
+            return -1;
+        }
+
+        Long val = stk.peek();
+        if(val < min)
+        {
+            return min.intValue();
+        }
+        return val.intValue();
+    }
+
+    public int getMin() {
+        return min.intValue();
+    }
+}
+
+
+
 
 public class StackAndQueueUse 
 {
