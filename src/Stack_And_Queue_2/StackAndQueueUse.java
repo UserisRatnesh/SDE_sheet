@@ -2,6 +2,7 @@ package Stack_And_Queue_2;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -541,6 +542,87 @@ public class StackAndQueueUse
 		return time;
 	}
 
+	/*
+	 * Stock span problem => solved using a list just brute force.
+	 */
+	
+	
+	// TC = O(n^2)
+	// SC = O(n + n)
+	public static int[] maxMinWindow(int[] a, int n) {
+        // Write your code here
+
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            ans[i] = minWindow(a, n, a[i]);
+        }
+
+        return ans;
+    }
+
+    public static int minWindow(int[] a, int n, int windowSize) {
+
+        int max = Integer.MIN_VALUE;
+        Deque<Integer> dq = new ArrayDeque<>();
+        int l = 0;
+        int r = 0;
+        while (r < n) {
+            // remove all out of index
+            while (!dq.isEmpty() && dq.getFirst() < l) {
+                dq.removeFirst();
+            }
+
+            // add the current index if empty
+            if (dq.isEmpty()) {
+                dq.add(r);
+            } else if (a[r] > a[dq.getLast()]) {
+                dq.add(r);
+            } else {
+                while (!dq.isEmpty() && a[r] <= a[dq.getLast()]) {
+                    dq.removeLast();
+                }
+                dq.add(r);
+            }
+
+            if (r - l + 1 == windowSize) {
+                max = Math.max(max, a[dq.getFirst()]);
+                l++;
+            }
+            r++;
+        }
+
+        return max;
+    }
+    
+    public static int[] maxMinWindowBetter(int[] a, int n) {
+        // Write your code here
+
+        int[] ans = new int[n];
+        Arrays.fill(ans, Integer.MIN_VALUE);
+
+        for (int i = 0; i < n; i++) {
+            // search in left for smaller element index
+            int l = i;
+            while (l >= 0 && a[i] <= a[l]) {
+                l--;
+            }
+
+            // search in right for greater element index
+            int r = i;
+            while (r < n && a[i] <= a[r]) {
+                r++;
+            }
+
+
+            int length = r - l- 1;
+            ans[length-1] = Math.max(ans[length-1], a[i]);
+        }
+
+        for (int i = n-2; i >= 0; i--) {
+            ans[i] = Math.max(ans[i], ans[i+1]);
+        }
+        return ans;
+    }
 
 
 	public static void main(String[] args) 
