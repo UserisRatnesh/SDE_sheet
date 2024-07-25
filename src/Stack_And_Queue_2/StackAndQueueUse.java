@@ -594,6 +594,8 @@ public class StackAndQueueUse
         return max;
     }
     
+    // TC = O(n* n-i)
+    // SC = O(n)
     public static int[] maxMinWindowBetter(int[] a, int n) {
         // Write your code here
 
@@ -623,7 +625,53 @@ public class StackAndQueueUse
         }
         return ans;
     }
+    
+    
+    // TC = O(2*n)
+    // SC = O(2*n)
+    public static int[] maxMinWindowMostOptimal(int[] arr, int n) {
 
+        int[] ans = new int[n];
+        Arrays.fill(ans, Integer.MIN_VALUE);
+        // stack to keep track of element indices such that their values are in
+        // increasing order
+        Stack<Integer> stk = new Stack<>();
+
+        for (int i = 0; i <= n; i++) {
+
+            // search the index of left smaller element
+
+            // search the index of right smaller element
+
+            // find the length for which the current element can be an option for smaller
+            // element
+            // Assign this value for that length if already present element if smaller than
+            // present one
+
+            int currEle = i == n ? Integer.MIN_VALUE : arr[i];
+            while (!stk.isEmpty() && currEle <= arr[stk.peek()]) {
+
+                int popElement = arr[stk.pop()];
+
+                // now we know that left smaller for this popElement is the element just below
+                // this in the stack
+                // and right smaller is the curr one
+                int r = i;
+                int l = !stk.isEmpty() ? stk.peek() : -1;
+
+                int length = r - l - 2;
+                ans[length] = Math.max(popElement, ans[length]);
+            }
+            stk.push(i);
+        }
+
+        // If any length is vacant then fill it by just next element
+        for (int i = n - 2; i >= 0; i--) {
+            ans[i] = Math.max(ans[i], ans[i + 1]);
+        }
+
+        return ans;
+    }
 
 	public static void main(String[] args) 
 	{
