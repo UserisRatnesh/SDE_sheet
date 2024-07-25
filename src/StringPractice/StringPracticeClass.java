@@ -1,5 +1,50 @@
 package StringPractice;
 
+
+
+class TrieNode {
+    char data;
+    TrieNode[] children;
+    boolean isTerminal;
+
+    public TrieNode(char data) {
+        this.data = data;
+        this.children = new TrieNode[26];
+        this.isTerminal = false;
+
+        // assign those children a null value
+        for (int i = 0; i < 26; i++) {
+            children[i] = null;
+        }
+    }
+
+    public void insertWord(TrieNode root, String word) {
+
+        int n = word.length();
+
+        if (n == 0) {
+            root.isTerminal = true;
+            return;
+        }
+
+        int charIndex = word.charAt(0) - 'a';
+        TrieNode child;
+        if (root.children[charIndex] == null) {
+            // This is not the direct child of the root
+            // So make it one
+            char data = word.charAt(0);
+            child = new TrieNode(data);
+            root.children[charIndex] = child;
+        } else {
+            child = root.children[charIndex];
+        }
+
+        insertWord(child, word.substring(1));
+
+    }
+
+}
+
 public class StringPracticeClass {
 	
 	
@@ -105,6 +150,53 @@ public class StringPracticeClass {
         return (int)ans;
     }
 
+	
+	// TC = O(n*l)
+	// SC = O(n)
+    public static String longestCommonPrefix(String[] strs) {
+
+        // We will try to implement tries data structure
+        // and store all the words of the string in that
+        // and will search to find the largest common prefix
+        TrieNode root = new TrieNode('\0');
+        int n = strs.length;
+        for (int i = 0; i < n; i++) {
+            root.insertWord(root, strs[i]);
+        }
+        // Search for the largest common prefix
+
+        String ans = helper(root, "");
+        return ans;
+
+    }
+
+    public static String helper(TrieNode root, String ans) {
+
+        if (root == null) {
+            return ans;
+        }
+
+        int childCount = 0;
+        TrieNode child = null;
+        // Find the number of children
+        for (int i = 0; i < 26; i++) {
+            if (root.children[i] != null) {
+                childCount++;
+                child = root.children[i];
+            }
+        }
+
+        if (childCount == 1 && child != null) {
+            if (child.isTerminal) {
+                return ans + child.data;
+            }
+            return helper(child, ans + child.data);
+        }
+        return ans;
+    }
+
+
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
