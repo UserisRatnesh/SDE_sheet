@@ -81,7 +81,7 @@ public class StringPracticeClass {
 				j++;
 			}
 
-			if (j == pl) { // Here j can never be equal to zero, if j == 0 then arroy out of boud exception
+			if (j == pl) { // Here j can never be equal to zero, if j == 0 then array out of bound exception
 				System.out.println("Found at index : " + (i - pl));
 				j = lps[j - 1];
 			} else if (pattern.charAt(j) != s.charAt(i)) {
