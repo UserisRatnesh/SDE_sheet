@@ -271,6 +271,79 @@ public class StringPracticeClass {
 		}
 		return ans;
 	}
+	
+	
+	// TC = O(m+n), In best and average case, but O(m*n) in worst case
+	// SC = O(length(B))
+    public static int repeatedStringMatch(String A, String B) {
+        if (A.isEmpty() || B.isEmpty()) {
+            return -1;
+        }
+        int count = 1;
+        StringBuilder sbA = new StringBuilder(A);
+        while (sbA.length() < B.length()) {
+            sbA.append(A);
+            count++;
+        }
+
+        if (RobinKarp(sbA.toString(), B)) {
+            return count;
+        }
+        if (RobinKarp(sbA.append(A).toString(), B)) {
+            return count + 1;
+        }
+        return -1;
+    }
+
+
+
+
+	public static final long MOD = 1_000_000_007;
+	
+	public static boolean RobinKarp(String text, String pattern) {
+		if (text.length() < pattern.length()) {
+			return false;
+		}
+
+		int n = text.length();
+		int m = pattern.length();
+
+		long power = 1;
+		long BASE = 256;
+
+		for (int i = 1; i <= m - 1; i++) {
+			power = (power * BASE) % MOD;
+		}
+
+		long patternHashCode = 0;
+		for (int i = 0; i < m; i++) {
+			patternHashCode = (patternHashCode * BASE + pattern.charAt(i)) % MOD;
+		}
+
+		long textHashCode = 0;
+		for (int i = 0; i < n; i++) {
+			textHashCode = (textHashCode * BASE + text.charAt(i)) % MOD;
+
+			if (i + 1 < m) {
+
+				continue;
+			}
+
+			if (i + 1 > m) {
+				textHashCode = (textHashCode - text.charAt(i - m) * power) % MOD;
+			}
+			if (textHashCode < 0) {
+				textHashCode += MOD;
+			}
+
+			if (textHashCode == patternHashCode && text.substring(i - m + 1, i + 1).equals(pattern)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 
 
