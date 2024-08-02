@@ -76,6 +76,7 @@ public class GraphUse {
 
 
 
+	// TC = O(E log V)
 	static int[] dijkstra(int V, ArrayList<ArrayList<ArrayList<Integer>>> adj, int S) {
 		// Write your code here
 
