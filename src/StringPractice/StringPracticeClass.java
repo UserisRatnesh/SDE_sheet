@@ -274,7 +274,7 @@ public class StringPracticeClass {
 	
 	
 	// TC = O(m+n), In best and average case, but O(m*n) in worst case
-	// SC = O(length(B))
+	// SC = O(length(B))	
     public static int repeatedStringMatch(String A, String B) {
         if (A.isEmpty() || B.isEmpty()) {
             return -1;
