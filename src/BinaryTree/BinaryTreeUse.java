@@ -116,7 +116,7 @@ public class BinaryTreeUse {
 	
 	// TC = O(n)
 	// SC = O(n)
-	ArrayList<Integer> leftView(TreeNode root)
+	public static ArrayList<Integer> leftView(TreeNode root)
     {
         
         ArrayList<Integer> list = new ArrayList<>();
@@ -146,6 +146,28 @@ public class BinaryTreeUse {
     
         return list;
     }
+	
+	// TC = O(n)
+	public static List<Integer> leftViewBetter(TreeNode root){
+		
+		List<Integer> list = new ArrayList<>();
+		
+		leftViewhelper(root, list, 0);
+		
+		return list;
+	}
+	public static void leftViewhelper(TreeNode root, List<Integer> list, int level) {
+		if(root == null)	return;
+		
+		if(list.size() == level) {
+			list.add(root.val);
+		}
+		
+		
+		leftViewhelper(root.left, list, level+1);
+		leftViewhelper(root.right, list, level+1);
+		
+	}
 	
 	
 
