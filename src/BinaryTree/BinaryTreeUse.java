@@ -346,6 +346,40 @@ public class BinaryTreeUse {
         helper(root.right, list);
         list.get(2).add(root.val);
     }
+    
+    
+    
+    // TC = O(n)
+    // SC = O( memory taken by ans and stack )
+    public static ArrayList<ArrayList<Integer>> Paths(TreeNode root) {
+        // code here
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        helperPaths(root, new ArrayList<Integer>(), ans);
+        
+        return ans;
+    }
+    
+    public static void helperPaths(TreeNode root, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> ans){
+        if(root == null)   {
+            return;
+        }
+        
+        if(root.left == null && root.right == null){
+            list.add(root.val);
+            ans.add(list);
+            return;
+        }
+        
+        list.add(root.val);
+        
+        ArrayList<Integer> left = new ArrayList<>(list);
+        
+        helperPaths(root.left, left, ans);
+        helperPaths(root.right, list, ans);
+        
+        
+        
+    }
 
 
 
