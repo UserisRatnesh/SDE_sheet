@@ -351,15 +351,15 @@ public class BinaryTreeUse {
     
     // TC = O(n)
     // SC = O( memory taken by ans and stack )
-    public static ArrayList<ArrayList<Integer>> Paths(TreeNode root) {
+    public static ArrayList<ArrayList<Integer>> PathToEveryNode(TreeNode root) {
         // code here
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
-        helperPaths(root, new ArrayList<Integer>(), ans);
+        PathToEveryNodeHelper(root, new ArrayList<Integer>(), ans);
         
         return ans;
     }
     
-    public static void helperPaths(TreeNode root, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> ans){
+    public static void PathToEveryNodeHelper(TreeNode root, ArrayList<Integer> list, ArrayList<ArrayList<Integer>> ans){
         if(root == null)   {
             return;
         }
@@ -374,8 +374,8 @@ public class BinaryTreeUse {
         
         ArrayList<Integer> left = new ArrayList<>(list);
         
-        helperPaths(root.left, left, ans);
-        helperPaths(root.right, list, ans);
+        PathToEveryNodeHelper(root.left, left, ans);
+        PathToEveryNodeHelper(root.right, list, ans);
         
         
         
