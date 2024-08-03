@@ -282,7 +282,7 @@ public class BinaryTreeUse {
 	
 	// TC = O(3*n)
     // SC = O(3*n)
-    public static List<List<Integer>> getTreeTraversal(TreeNode root) {
+    public static List<List<Integer>> prePostInorderTraversal(TreeNode root) {
         // Write your code here.
         List<List<Integer>> list = new ArrayList<>();
         List<Integer> pre = new ArrayList<>();  // 1 
@@ -327,7 +327,7 @@ public class BinaryTreeUse {
     
     
     // Second approach
-    public static List<List<Integer>> getTreeTraversalSecond(TreeNode root) {
+    public static List<List<Integer>> prePostInorderTraversalSecond(TreeNode root) {
         // Write your code here.
         List<List<Integer>> list = new ArrayList<>();
         for(int i=0; i<3; i++){
