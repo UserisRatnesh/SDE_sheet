@@ -46,7 +46,7 @@ public class BinaryTree_2_Use {
 			return true;
 		}
 
-		if(Math.abs(height(root.right)-height(root.left)) > 1)
+		if(Math.abs(getHeight(root.right)-getHeight(root.left)) > 1)
 		{
 			return false;
 		}
@@ -61,21 +61,6 @@ public class BinaryTree_2_Use {
 
 	}
 
-	public int height(TreeNode root)
-	{
-		if(root == null)
-		{
-			return 0;
-		}
-		if(root.left == null && root.right == null)
-		{
-			return 1;
-		}
-		int leftH = height(root.left);
-		int rightH = height(root.right);
-		int h = Math.max(leftH, rightH);
-		return 1+h;
-	}
 
 	// TC = O(n)
 	// SC = O(1)
@@ -84,7 +69,8 @@ public class BinaryTree_2_Use {
 	{
 		return heightBetter(root) != -1;
 	}
-
+	
+	// Finding height and checking if tree is balanced or not in the same one go
 	public int heightBetter(TreeNode root)
 	{
 		if(root == null)
@@ -112,7 +98,48 @@ public class BinaryTree_2_Use {
 		int h = Math.max(leftH, rightH);
 		return 1+h;
 	}
+	
+	
+	// Brute force of finding height of binary tree
+	// TC = O(n^2)
+	
+	public int diameterOfBinaryTree(TreeNode root) 
+    {
+        if(root == null)
+        {
+            return 0;
+        }
 
+        int left = getHeight(root.left);
+        int right = getHeight(root.right);
+        int d = left+right;
+        int leftD = diameterOfBinaryTree(root.left);
+        int rightD = diameterOfBinaryTree(root.right);
+
+        return Math.max(Math.max(leftD, rightD), d);
+
+    }
+	
+	// Better approach 
+	// While calculating height of tree try to find width of that node there only
+	// Now max[0] will return the diameter of binary tree
+	
+	// TC = O(n)
+	public int diameterOfBinaryTreeBetter(TreeNode root, int[] max) 
+    {
+        if(root == null)
+        {
+            return 0;
+        }
+
+        int left = diameterOfBinaryTreeBetter(root.left, max);
+        int right = diameterOfBinaryTreeBetter(root.right, max);
+        
+        max[0] = Math.max(max[0], left+right);
+
+        return 1+ Math.max(left, right);
+
+    }
 
 
 
