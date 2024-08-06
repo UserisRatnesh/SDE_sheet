@@ -1,5 +1,7 @@
 package BinaryTree_2;
 
+import java.util.ArrayList;
+import java.util.List;
 
 class TreeNode {
 	int val;
@@ -69,7 +71,7 @@ public class BinaryTree_2_Use {
 	{
 		return heightBetter(root) != -1;
 	}
-	
+
 	// Finding height and checking if tree is balanced or not in the same one go
 	public int heightBetter(TreeNode root)
 	{
@@ -98,63 +100,144 @@ public class BinaryTree_2_Use {
 		int h = Math.max(leftH, rightH);
 		return 1+h;
 	}
-	
-	
+
+
 	// Brute force of finding height of binary tree
 	// TC = O(n^2)
-	
+
 	public int diameterOfBinaryTree(TreeNode root) 
-    {
-        if(root == null)
-        {
-            return 0;
-        }
+	{
+		if(root == null)
+		{
+			return 0;
+		}
 
-        int left = getHeight(root.left);
-        int right = getHeight(root.right);
-        int d = left+right;
-        int leftD = diameterOfBinaryTree(root.left);
-        int rightD = diameterOfBinaryTree(root.right);
+		int left = getHeight(root.left);
+		int right = getHeight(root.right);
+		int d = left+right;
+		int leftD = diameterOfBinaryTree(root.left);
+		int rightD = diameterOfBinaryTree(root.right);
 
-        return Math.max(Math.max(leftD, rightD), d);
+		return Math.max(Math.max(leftD, rightD), d);
 
-    }
-	
+	}
+
 	// Better approach 
 	// While calculating height of tree try to find width of that node there only
 	// Now max[0] will return the diameter of binary tree
-	
+
 	// TC = O(n)
 	public int diameterOfBinaryTreeBetter(TreeNode root, int[] max) 
-    {
-        if(root == null)
-        {
-            return 0;
-        }
+	{
+		if(root == null)
+		{
+			return 0;
+		}
 
-        int left = diameterOfBinaryTreeBetter(root.left, max);
-        int right = diameterOfBinaryTreeBetter(root.right, max);
-        
-        max[0] = Math.max(max[0], left+right);
+		int left = diameterOfBinaryTreeBetter(root.left, max);
+		int right = diameterOfBinaryTreeBetter(root.right, max);
 
-        return 1+ Math.max(left, right);
+		max[0] = Math.max(max[0], left+right);
 
-    }
+		return 1+ Math.max(left, right);
+
+	}
 
 	// TC = O(n)
 	public boolean isSameTree(TreeNode p, TreeNode q) {
-        if(p == null && q == null)
+		if(p == null && q == null)
+		{
+			return true;
+		}
+		if(p == null || q == null)
+		{
+			return false;
+		}
+
+		// if both are not null
+		return ((p.val == q.val) && isSameTree(p.left, q.left) && isSameTree(p.right, q.right));
+
+	}
+
+	// TC = O(n)
+	// SC = O(2*n)
+	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+		List<TreeNode> pathP = new ArrayList<>();
+		List<TreeNode> pathQ = new ArrayList<>();
+
+		boolean isPathP = getPath(root, p, pathP);
+		boolean isPathQ = getPath(root, q, pathQ);
+
+		TreeNode ans = null;
+		if(isPathP && isPathQ){
+
+			int minL = Math.min(pathP.size(), pathQ.size());
+			for(int i=0; i<minL; i++){
+				if(pathP.get(i).val == pathQ.get(i).val)
+				{
+					ans = pathP.get(i);
+				}
+				else{
+					break;
+				}
+			}
+		}
+
+		return ans;
+
+
+	}
+
+	// TC = O(n)
+	public boolean getPath(TreeNode root, TreeNode dest, List<TreeNode> path){
+		if(root == null){
+			return false;
+		}
+
+		if(root.val == dest.val){
+			path.add(root);
+			return true;
+		}
+
+		path.add(root);
+
+		if(getPath(root.left, dest, path))
+		{
+			return true;
+		}
+
+		if(getPath(root.right, dest, path))
+		{
+			return true;
+		}
+		path.remove(path.size()-1);
+
+		return false;
+	}
+	
+	
+	// TC = O(n)
+    // SC = O(1)
+    public TreeNode lowestCommonAncestorOptimal(TreeNode root, TreeNode p, TreeNode q) {
+        
+        if(root == null || root == p || root == q)
         {
-            return true;
-        }
-        if(p == null || q == null)
-        {
-            return false;
+            return root;
         }
 
-        // if both are not null
-        return ((p.val == q.val) && isSameTree(p.left, q.left) && isSameTree(p.right, q.right));
-        
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if(left == null){
+            return right;
+        }else if(right == null){
+            return left;
+        }
+        else{
+            return root;
+        }
+
     }
 
 
