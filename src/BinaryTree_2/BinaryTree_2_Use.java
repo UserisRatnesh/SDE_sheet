@@ -215,30 +215,106 @@ public class BinaryTree_2_Use {
 
 		return false;
 	}
-	
-	
+
+
 	// TC = O(n)
-    // SC = O(1)
-    public TreeNode lowestCommonAncestorOptimal(TreeNode root, TreeNode p, TreeNode q) {
-        
-        if(root == null || root == p || root == q)
-        {
-            return root;
-        }
+	// SC = O(1)
+	public TreeNode lowestCommonAncestorOptimal(TreeNode root, TreeNode p, TreeNode q) {
 
-        TreeNode left = lowestCommonAncestor(root.left, p, q);
-        TreeNode right = lowestCommonAncestor(root.right, p, q);
+		if(root == null || root == p || root == q)
+		{
+			return root;
+		}
 
-        if(left == null){
-            return right;
-        }else if(right == null){
-            return left;
-        }
-        else{
-            return root;
-        }
+		TreeNode left = lowestCommonAncestor(root.left, p, q);
+		TreeNode right = lowestCommonAncestor(root.right, p, q);
 
-    }
+		if(left == null){
+			return right;
+		}else if(right == null){
+			return left;
+		}
+		else{
+			return root;
+		}
+
+	}
+
+
+
+	// TC = O(height + n)
+	// SC = O(n)
+	public static List<Integer> traverseBoundary(TreeNode root){
+
+		List<Integer> ans = new ArrayList<>(); 
+		ans.add(root.val);
+
+		fillLeftBoundary(root.left, ans);
+
+		fillLeafNodes(root, ans);
+
+		List<Integer> rightBoundary = new ArrayList<>();
+		fillRightBoundary(root.right, rightBoundary);
+
+		for(int i=rightBoundary.size()-1; i>=0; i--){
+			ans.add(rightBoundary.get(i));
+		}
+
+		return ans;
+	}
+
+
+	// TC = O(height)
+	// SC = O(n)
+	public static void fillRightBoundary(TreeNode root, List<Integer> boundary)
+	{
+		if(root == null){
+			return;
+		}
+		if(root.left == null && root.right == null){
+			return;
+		}
+
+		boundary.add(root.val);
+		if(root.right == null){
+			fillRightBoundary(root.left, boundary);
+		}else{
+			fillRightBoundary(root.right, boundary);
+		}
+	}
+
+	// TC = O(n)
+	// SC = O(n)
+	public static void fillLeafNodes(TreeNode root, List<Integer> ans){
+		if(root == null)    return;
+
+		if(root.left == null && root.right == null)
+		{
+			// leaf node
+			ans.add(root.val);
+			return;
+		}
+
+		fillLeafNodes(root.left, ans);
+		fillLeafNodes(root.right, ans);
+	}
+
+	// TC = O(height + n)
+	// SC = O(n)
+	public static void fillLeftBoundary(TreeNode root, List<Integer> ans)
+	{
+		if(root == null)    return;
+		if(root.left == null && root.right == null){
+			return;
+		}
+
+		ans.add(root.val);
+		if(root.left == null){
+			fillLeftBoundary(root.right, ans);
+		}else{
+			fillLeftBoundary(root.left, ans);
+		}
+	}
 
 
 	public static void main(String[] args) {
