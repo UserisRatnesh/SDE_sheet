@@ -210,7 +210,47 @@ public class BinaryTree_3_Use {
         root.right = buildTreeHelperBetter(preorder, siPRight, eiPRight, inorder, siIRight, eiIRight, map);
         return root;
 
+    }
+    
+    
+    // TC = O(n)
+    // SC = O(n)
+    public static TreeNode buildTreeInPost(int[] inorder, int[] postorder) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int n = inorder.length;
+        for(int i=0; i<n; i++){
+            map.put(inorder[i], i);
+        }
 
+        return buildTreeInPostHelper(inorder, 0, n-1, postorder, 0, n-1, map);
+    }
+
+    public static TreeNode buildTreeInPostHelper(int[] inorder, int sI, int eI, int[] postorder, int sP, int eP, HashMap<Integer, Integer> map)
+    {
+        if(sI > eI){
+            return null;
+        }
+
+        int rootData = postorder[eP];
+        TreeNode root = new TreeNode(rootData);
+
+        int rootIndex = map.get(rootData);
+
+        int lsP = sP;
+        int reP = eP-1;
+
+        int lsI = sI;
+        int leI = rootIndex - 1;
+        int rsI = rootIndex + 1;
+        int reI = eI;
+
+        int leP = lsP + (leI - lsI);
+        int rsP = leP + 1;
+
+        root.left = buildTreeInPostHelper(inorder, lsI, leI, postorder, lsP, leP, map);
+        root.right = buildTreeInPostHelper(inorder, rsI, reI, postorder, rsP, reP, map);
+
+        return root;
     }
 
 	public static void main(String[] args) {
