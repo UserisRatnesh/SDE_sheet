@@ -1,5 +1,6 @@
 package BinaryTree_3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class TreeNode {
@@ -251,6 +252,60 @@ public class BinaryTree_3_Use {
         root.right = buildTreeInPostHelper(inorder, rsI, reI, postorder, rsP, reP, map);
 
         return root;
+    }
+    
+    
+    // flatten the binary tree
+    // TC = O(n)
+    // SC = O(n)
+    public static void flatten(TreeNode root) 
+    {
+        ArrayList<TreeNode> arr = preorder(root, new ArrayList<TreeNode>());
+        for(int i=0; i<arr.size()-1; i++)
+        {
+            arr.get(i).right = arr.get(i+1);
+            arr.get(i).left = null;
+        }
+        
+    }
+
+    public static ArrayList<TreeNode> preorder(TreeNode root, ArrayList<TreeNode> arr)
+    {
+        if(root == null)
+        {
+            return arr;
+        }
+        if(root.left == null && root.right == null)
+        {
+            arr.add(root);
+            return arr;
+        }
+
+        arr.add(root);
+        arr = preorder(root.left, arr);
+        arr = preorder(root.right, arr);
+        return arr;
+    }
+    
+    // TC = O(n)
+    public void flattenBetter(TreeNode root) 
+    {
+        TreeNode[] prev = new TreeNode[1];
+        prev[0] = null;
+        flattenHelper(root, prev);
+        
+    }
+
+    public void flattenHelper(TreeNode root, TreeNode[] prev){
+        if(root == null)    return;
+
+        flattenHelper(root.right, prev);
+        flattenHelper(root.left, prev);
+
+        root.right = prev[0];
+        root.left = null;
+        prev[0] = root;
+
     }
 
 	public static void main(String[] args) {
