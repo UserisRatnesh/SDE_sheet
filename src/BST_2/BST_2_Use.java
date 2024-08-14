@@ -18,6 +18,9 @@ class TreeNode {
 }
 
 
+
+
+
 public class BST_2_Use {
 
 
@@ -176,6 +179,40 @@ public class BST_2_Use {
         
         return -1;
     }
+    
+    
+    // TC = O(n)
+    // SC = O(n)
+    public boolean findTarget(TreeNode root, int target) {
+        List<Integer> list = new ArrayList<>();
+        inorder(root, list);
+        int left = 0;
+        int right = list.size()-1;
+        while(left < right){
+            int sum = list.get(left) + list.get(right);
+            if(sum == target)   return true;
+            if(sum > target){
+                right--;
+            }else{
+                left++;
+            }
+        }
+
+        return false;
+    }
+
+    public void inorder(TreeNode root, List<Integer> list){
+        if(root == null){
+            return;
+        }
+
+        inorder(root.left, list);
+        list.add(root.val);
+        inorder(root.right, list);
+    }
+    
+    
+    
 
 
 	public static void main(String[] args) {
