@@ -18,6 +18,37 @@ class TreeNode {
 }
 
 
+class BSTIterator {
+
+    private List<Integer> inorder;
+    private int index;
+    private int size;
+
+    private void iterate(TreeNode root){
+        if(root == null){
+            return;
+        }
+
+        iterate(root.left);
+        this.inorder.add(root.val);
+        iterate(root.right);
+    }
+
+    public BSTIterator(TreeNode root) {
+        this.inorder = new ArrayList<>();
+        this.index = 0;
+        this.iterate(root);
+        this.size = this.inorder.size();
+    }
+    
+    public int next() {
+        return this.inorder.get(index++);
+    }
+    
+    public boolean hasNext() {
+        return index < size;
+    }
+}
 
 
 
