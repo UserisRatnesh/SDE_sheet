@@ -124,7 +124,58 @@ public class BST_2_Use {
         return ans;
         
     }
+	
+	// TC = O(n)
+	// SC = O(n) -> without stack space
+	// It can be done using in order traversal also like kth largest 
+	public int kthSmallest(TreeNode root, int k) 
+    {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        inorder(root, list);
+        return list.get(k-1);   
+    }
 
+    public void inorder(TreeNode root, ArrayList<Integer> list)
+    {
+        if(root == null)
+        {
+            return;
+        }
+
+        inorder(root.left, list);
+        list.add(root.val);
+        inorder(root.right, list);
+        
+    }
+
+	
+	// TC = O(n) 
+    // SC = O(1)
+	// Reverse in order traversal
+	public int kthLargest(TreeNode root,int K)
+    {
+        int[] counter = new int[1];
+        return kthLargestHelper(root, K, counter);
+    }
+    
+    public int kthLargestHelper(TreeNode root, int k, int[] counter){
+        if(root == null){
+            return -1;
+        }
+        
+        int right = kthLargestHelper(root.right, k, counter);
+        if(right != -1) return right;
+        
+        counter[0]++;
+        if(counter[0] == k){
+            return root.val;
+        }
+        
+        int left = kthLargestHelper(root.left, k, counter);
+        if(left != -1)    return left;
+        
+        return -1;
+    }
 
 
 	public static void main(String[] args) {
