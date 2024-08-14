@@ -120,61 +120,80 @@ public class BST_Use {
 		return new Output(max, min, isBST);
 
 	}
-	
-	
+
+
 	// TC = O(n)
 	// SC = O(n)
 	public static boolean isValidBSTBetter(TreeNode root) {
 
 		List<Integer> inorder = new ArrayList<>();
-		
+
 		inorderTraversal(root, inorder);
-		
+
 		for(int i=1; i<inorder.size(); i++) {
 			if(inorder.get(i) <= inorder.get(i-1))
 			{
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	public static void inorderTraversal(TreeNode root, List<Integer> list) {
 		if(root == null) {
 			return ;
 		}
-		
+
 		inorderTraversal(root.left, list);
 		list.add(root.val);
 		inorderTraversal(root.right, list);
 	}
+
+
+	// TC = O(n)
+	public boolean isValidBSTOptimal(TreeNode root) 
+	{
+		return helperIsValidBSTOptimal(root, Long.MIN_VALUE, Long.MAX_VALUE);
+	}
+
+	public boolean helperIsValidBSTOptimal(TreeNode root, long min, long max){
+		if(root == null){
+			return true;
+		}
+
+		if(root.val <= min || root.val >= max ){
+			return false;
+		}
+
+		boolean left = helperIsValidBSTOptimal(root.left, min, root.val);
+
+		boolean right = helperIsValidBSTOptimal(root.right, root.val, max);
+
+		return left && right;
+	}
 	
 	
 	// TC = O(n)
-	public boolean isValidBSTOptimal(TreeNode root) 
-    {
-        return helperIsValidBSTOptimal(root, Long.MIN_VALUE, Long.MAX_VALUE);
-    }
+	// Simple In-order traversal
+	public static void findPreSuc(TreeNode root, TreeNode[] pre, TreeNode[] suc, int key) {
 
-    public boolean helperIsValidBSTOptimal(TreeNode root, long min, long max){
-        if(root == null){
-            return true;
-        }
+		if(root == null){
+			return;
+		}
 
-        if(root.val <= min || root.val >= max ){
-            return false;
-        }
+		findPreSuc(root.left, pre, suc, key);
+		if(root.val < key){
+			pre[0] = root;
+		}else if(root.val > key && suc[0] == null){
+			suc[0] = root;
+		}
 
-        boolean left = helperIsValidBSTOptimal(root.left, min, root.val);
+		findPreSuc(root.right, pre, suc, key);
+	}
 
-        boolean right = helperIsValidBSTOptimal(root.right, root.val, max);
 
-        return left && right;
-    }
-	
-	
-	
+
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
