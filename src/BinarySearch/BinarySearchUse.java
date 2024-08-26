@@ -105,7 +105,7 @@ public class BinarySearchUse
 	// TC = O(n*log m)
 	// SC = O(1)
 	private static int countSmallEqual(int[][] matrix, int mid)
-	{
+	{	
 		int row = matrix.length;
 
 		int countAns = 0;
@@ -137,6 +137,10 @@ public class BinarySearchUse
 			{
 				l = mid+1;
 			}
+		}
+		
+		if(ans == -1) {
+			return arr.length;
 		}
 
 		return ans;
