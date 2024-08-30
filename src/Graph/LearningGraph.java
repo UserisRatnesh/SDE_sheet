@@ -6,118 +6,156 @@ import java.util.Queue;
 import java.util.Stack;
 
 public class LearningGraph {
-	
-	
+
+
 	// TC = O(v*E), since it is a dfs 
 	public int[] topoSort(int V, List<Integer>[] adj) {
 
-        Stack<Integer> stk = new Stack<>();
+		Stack<Integer> stk = new Stack<>();
 
-        boolean[] visited = new boolean[V];
+		boolean[] visited = new boolean[V];
 
-        for(int i=0; i<V; i++){
-            if(!visited[i]){
-                dfs(i, adj, stk, visited);
-            }
-        }
+		for(int i=0; i<V; i++){
+			if(!visited[i]){
+				dfs(i, adj, stk, visited);
+			}
+		}
 
-        int[] ans = new int[V];
-        int index = 0;
+		int[] ans = new int[V];
+		int index = 0;
 
-        while(!stk.isEmpty()){
-            ans[index++] = stk.pop();
-        }
+		while(!stk.isEmpty()){
+			ans[index++] = stk.pop();
+		}
 
-        return ans;
+		return ans;
 
-        
-    }
 
-    public void dfs(int v, List<Integer>[] adj, Stack<Integer> stk, boolean[] visited){
+	}
 
-        visited[v] = true;
-        
-        for(Integer node : adj[v]){
-            if(!visited[node]){
-                dfs(node, adj, stk, visited);
-            }
-        }
+	public void dfs(int v, List<Integer>[] adj, Stack<Integer> stk, boolean[] visited){
 
-        stk.add(v);
-    }
-    
-    // Topo sort using bfs
-    // TC = O(v+E)
-    public int[] topoSortBFS(int V, List<Integer>[] adj) {
+		visited[v] = true;
 
-        int[] indegree = new int[V];
+		for(Integer node : adj[v]){
+			if(!visited[node]){
+				dfs(node, adj, stk, visited);
+			}
+		}
 
-        for(int i=0; i<V; i++){
-            for(Integer child : adj[i]){
-                indegree[child]++;
-            }
+		stk.add(v);
+	}
 
-        }
+	// Topo sort using bfs
+	// TC = O(v+E)
+	public int[] topoSortBFS(int V, List<Integer>[] adj) {
 
-        Queue<Integer> que = new LinkedList<>();
-        for(int i=0; i<V; i++){
-            if(indegree[i] == 0){
-                que.add(i);
-            }
-        }
+		int[] indegree = new int[V];
 
-        int[] ans = new int[V];
-        int index = 0;
-        while(!que.isEmpty()){
-            int node = que.poll();
-            ans[index++] = node;
-            for(Integer child : adj[node]){
-                indegree[child]--;
-                if(indegree[child] == 0){
-                    que.add(child);
-                }
-            }
-        }
+		for(int i=0; i<V; i++){
+			for(Integer child : adj[i]){
+				indegree[child]++;
+			}
 
-        return ans;
-        
-    }
-    
-    
-    // Finding cycle in directed graph
-    public boolean isCyclic(int N, List<Integer>[] adj) {
+		}
 
-        boolean[] visited = new boolean[N];
-        for(int i=0; i<N; i++){
-            if(!visited[i]){
-                if(dfs(i, adj, visited)){
-                    return true;
-                }
-            }
-        }
+		Queue<Integer> que = new LinkedList<>();
+		for(int i=0; i<V; i++){
+			if(indegree[i] == 0){
+				que.add(i);
+			}
+		}
 
-        return false;
-      
-    }
+		int[] ans = new int[V];
+		int index = 0;
+		while(!que.isEmpty()){
+			int node = que.poll();
+			ans[index++] = node;
+			for(Integer child : adj[node]){
+				indegree[child]--;
+				if(indegree[child] == 0){
+					que.add(child);
+				}
+			}
+		}
 
-    public boolean dfs(int v, List<Integer>[] adj, boolean[] visited){
+		return ans;
 
-        if(visited[v]){
-            return true;
-        }
-        
-        visited[v] = true;
-        for(Integer child : adj[v]){
-            if(dfs(child, adj, visited)){
-                visited[v] = false;
-                return true;
-            }
-        }
+	}
 
-        visited[v] = false;
-        return false;
 
-    }
+	// Finding cycle in directed graph
+	// simply i am finding path to the node that is already visited
+	public boolean isCyclic(int N, List<Integer>[] adj) {
+
+		boolean[] visited = new boolean[N];
+		for(int i=0; i<N; i++){
+			if(!visited[i]){
+				if(dfs(i, adj, visited)){
+					return true;
+				}
+			}
+		}
+
+		return false;
+
+	}
+
+	public boolean dfs(int v, List<Integer>[] adj, boolean[] visited){
+
+		if(visited[v]){
+			return true;
+		}
+
+		visited[v] = true;
+		for(Integer child : adj[v]){
+			if(dfs(child, adj, visited)){
+				visited[v] = false; // backtracking
+				return true;
+			}
+		}
+
+		visited[v] = false; // backtracking
+		return false;
+	}
+
+	// Finding cycle in directed graph
+	// not intuitive
+	public boolean isCyclicImproved(int N, List<Integer>[] adj) {
+
+		boolean[] visited = new boolean[N];
+		boolean[] pathVis = new boolean[N];
+		for(int i=0; i<N; i++){
+			if(!visited[i]){
+				if(dfs(i, adj, visited, pathVis)){
+					return true;
+				}
+			}
+		}
+
+		return false;
+
+	}
+
+	public boolean dfs(int v, List<Integer>[] adj, boolean[] visited, boolean[] pathVis){
+
+		visited[v] = true;
+		pathVis[v] = true;
+
+		for(Integer child : adj[v]){
+			if(!visited[child]){
+				if(dfs(child, adj, visited, pathVis)) return true;
+			}
+			else if(pathVis[child]){
+				return true;
+			}
+
+		}
+
+		pathVis[v] = false;
+		return false;
+
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
