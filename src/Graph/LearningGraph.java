@@ -1,5 +1,6 @@
 package Graph;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -156,6 +157,41 @@ public class LearningGraph {
 		return false;
 
 	}
+
+	// Finding cycle in DAG using Kahn's algorithm
+	public boolean isCyclicKahnsAlgo(int N, List<Integer>[] adj) {
+
+		int[] indeg = new int[N];
+
+		for(int i=0; i<N; i++){
+			for(Integer child : adj[i]){
+				indeg[child]++;
+			}
+		}
+
+		Queue<Integer> que = new LinkedList<>();
+		for(int i=0; i<N; i++){
+			if(indeg[i] == 0){
+				que.add(i);
+			}
+		}
+
+		List<Integer> list = new ArrayList<>();
+		while(!que.isEmpty()){
+			int node = que.poll();
+			list.add(node);
+			for(Integer child : adj[node]){
+				indeg[child]--;
+				if(indeg[child] == 0){
+					que.add(child);
+				}
+			}
+		}
+
+		return list.size() != N;
+	}
+
+
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
