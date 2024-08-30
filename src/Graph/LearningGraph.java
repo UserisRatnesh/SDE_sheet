@@ -82,6 +82,42 @@ public class LearningGraph {
         return ans;
         
     }
+    
+    
+    // Finding cycle in directed graph
+    public boolean isCyclic(int N, List<Integer>[] adj) {
+
+        boolean[] visited = new boolean[N];
+        for(int i=0; i<N; i++){
+            if(!visited[i]){
+                if(dfs(i, adj, visited)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+      
+    }
+
+    public boolean dfs(int v, List<Integer>[] adj, boolean[] visited){
+
+        if(visited[v]){
+            return true;
+        }
+        
+        visited[v] = true;
+        for(Integer child : adj[v]){
+            if(dfs(child, adj, visited)){
+                visited[v] = false;
+                return true;
+            }
+        }
+
+        visited[v] = false;
+        return false;
+
+    }
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
