@@ -1,6 +1,7 @@
 package Graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -49,6 +50,7 @@ public class LearningGraph {
 
 	// Topo sort using bfs
 	// TC = O(v+E)
+	// Kahn's algorithm
 	public int[] topoSortBFS(int V, List<Integer>[] adj) {
 
 		int[] indegree = new int[V];
@@ -159,6 +161,7 @@ public class LearningGraph {
 	}
 
 	// Finding cycle in DAG using Kahn's algorithm
+	// TC = O
 	public boolean isCyclicKahnsAlgo(int N, List<Integer>[] adj) {
 
 		int[] indeg = new int[N];
@@ -190,12 +193,110 @@ public class LearningGraph {
 
 		return list.size() != N;
 	}
+	
+	
+	// Finding safe nodes
+	// TC = O(n^2)
+	// because dfs is taking O(n^2) because of backtracking
+	public int[] eventualSafeNodes(int V, int[][] adj) {
+
+        List<Integer> list = new ArrayList<>();
+
+        boolean[] visited = new boolean[V];
+
+        for(int i=0; i<V; i++){
+            if(!visited[i]){
+                if(!dfs(i, adj, visited)){
+                    list.add(i);
+                }
+            }
+        }
+
+        int[] output = new int[list.size()];
+        int index = 0;
+        for(Integer v : list){
+            output[index++] = v;
+        }
+
+        return output;
+       
+    }
+
+
+    public boolean dfs(int v, int[][] adj, boolean[] visited){
+
+        visited[v] = true;
+        for(Integer child : adj[v]){
+            if(!visited[child]){
+                if(dfs(child, adj, visited)){
+                    return true;
+                }
+            }else if(visited[child]){
+                return true;
+            }
+        }
+
+        visited[v] = false;
+        return false;
+    }
+    
+    
+    // TC = O(V+E)
+    // Simply as of BFS
+    public int[] eventualSafeNodesBetter(int V, int[][] adj) {
+        
+
+        int[] indeg = new int[V];
+        for (int i = 0; i < V; i++) {
+            indeg[i] = adj[i].length;
+        }
+
+        List<List<Integer>> adjList = new ArrayList<>();
+        for(int i=0; i<V; i++){
+            adjList.add(new ArrayList<>());
+        }
+        for(int i=0; i<V; i++){
+            for(Integer child : adj[i]){
+                adjList.get(child).add(i);
+            }
+        }   
+
+        Queue<Integer> que = new LinkedList<>();
+        for (int i = 0; i < V; i++) {
+            if (indeg[i] == 0) {
+                que.add(i);
+            }
+        }
+
+        List<Integer> list = new ArrayList<>();
+
+        while (!que.isEmpty()) {
+            int node = que.poll();
+            list.add(node);
+            for (Integer child : adjList.get(node)) {
+                indeg[child]--;
+                if (indeg[child] == 0) {
+                    que.add(child);
+                }
+            }
+        }
+
+        int[] ans = new int[list.size()];
+        int index = 0;
+        for (Integer node : list) {
+            ans[index++] = node;
+        }
+
+        Arrays.sort(ans);
+        return ans;
+    
+    }
 
 
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	public static void main(String[] args) 
+	{
+		
 	}
 
 }
