@@ -291,6 +291,46 @@ public class LearningGraph {
         return ans;
     
     }
+    
+    // Kahn's algorithm
+    public boolean courseShedule1(int N, int[][] arr) {
+
+        List<List<Integer>> adj = new ArrayList<>();
+
+        for(int i=0; i<N; i++){
+            adj.add(new ArrayList<>());
+        }
+
+        int[] indeg = new int[N];
+
+        for(int i=0; i<arr.length; i++){
+            int first = arr[i][0];
+            int second = arr[i][1];
+            adj.get(second).add(first);
+            indeg[first]++;
+        }
+
+        Queue<Integer> que = new LinkedList<>();
+        for(int i=0; i<N; i++){
+            if(indeg[i] == 0){
+                que.add(i);
+            }
+        }
+
+        List<Integer> list = new ArrayList<>();
+        while(!que.isEmpty()){
+            int node = que.poll();
+            list.add(node);
+            for(Integer child : adj.get(node)){
+                indeg[child]--;
+                if(indeg[child] == 0){
+                    que.add(child);
+                }
+            }
+        }
+
+        return list.size() == N;
+    }
 
 
 
