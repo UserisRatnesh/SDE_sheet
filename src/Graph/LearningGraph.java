@@ -381,6 +381,74 @@ public class LearningGraph {
 
         return ans;
     }
+    
+    
+    // Done using kahn's algorithm
+    // TC = O(n*l + kahn's algorithm)
+    public String alienDict(String [] dict, int N, int K) {
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for(int i=0; i<K; i++){
+            adj.add(new ArrayList<>());
+        }
+        
+        int left = 0;
+        int right = 1;
+        while(right < N){
+            String sl = dict[left];
+            String rl = dict[right];
+            int n = Math.min(sl.length(), rl.length());
+            int i=0;
+            while(i < n && sl.charAt(i) == rl.charAt(i)){
+                i++;
+            }
+            if(i < sl.length() && i< rl.length()){
+                int source = sl.charAt(i)-'a';
+                int dest = rl.charAt(i)-'a';
+                adj.get(source).add(dest);
+            }
+            left++;
+            right++;
+        }
+
+        // System.out.println(adj);
+        // now adj list is prepared
+        String ans = kahnAlgo(adj, K);
+
+        return ans;
+
+    }
+
+    public String kahnAlgo(List<List<Integer>> adj, int n){
+        int[] indeg = new int[n];
+
+        for(int i=0; i<n; i++){
+            for(Integer child : adj.get(i)){
+                indeg[child]++;
+            }
+        }
+
+        Queue<Integer> que = new LinkedList<>();
+        for(int i=0; i<n; i++){
+            if(indeg[i] == 0){
+                que.add(i);
+            }
+        }
+
+        String ans = "";
+        while(!que.isEmpty()){
+            int node = que.poll();
+            ans += (char)(node+'a');
+            for(Integer child : adj.get(node)){
+                indeg[child]--;
+                if(indeg[child] == 0){
+                    que.add(child);
+                }
+            }
+        }
+
+        return ans;
+    }
 
 
 
