@@ -385,6 +385,11 @@ public class LearningGraph {
     
     // Done using kahn's algorithm
     // TC = O(n*l + kahn's algorithm)
+    
+    // Two cases when the alien dict is wrong
+    // 1. when cycle exists while in the adj list created
+    // 2. When abcd appears before abc
+    // 	i.e. when two words have common characters and the one with one extra char at last appears before the other
     public String alienDict(String [] dict, int N, int K) {
 
         List<List<Integer>> adj = new ArrayList<>();
