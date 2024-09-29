@@ -2,10 +2,14 @@ package Graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+
+
+
 
 public class LearningGraph {
 
@@ -453,6 +457,60 @@ public class LearningGraph {
         }
 
         return ans;
+    }
+    
+    
+    static class Pair {
+        String word;
+        int steps;
+
+        Pair(String word, int steps) {
+            this.word = word;
+            this.steps = steps;
+        }
+    }
+    
+    public static int wordLadderLength(String startWord, String targetWord, List<String> wordList) {
+
+        HashSet<String> wordSet = new HashSet<>();
+        for(String s : wordList){
+            wordSet.add(s);
+        }
+
+        if(!wordSet.contains(targetWord)){
+            return 0;
+        }
+
+        Queue<Pair> que = new LinkedList<>();
+        que.add(new Pair(startWord, 1));
+
+        while(!que.isEmpty()){
+            Pair pair = que.poll();
+            String word = pair.word;
+            int steps = pair.steps;
+
+            // go to each index of word and change it form a to z and check if it exists 
+            // in wordSet or not 
+            // if yes remove from word set and add to graph
+            // and put it in que
+            // else
+            // do nothing
+            for(int i=0; i<word.length(); i++){
+                for(char j='a'; j<='z'; j++){
+                    String newWord = word.substring(0,i) + j + word.substring(i+1);
+                    if(newWord.equals(targetWord)){
+                        return steps + 1;
+                    }
+                    if(wordSet.contains(newWord)){
+                        que.add(new Pair(newWord, steps+1));
+                        wordSet.remove(newWord);
+                    }
+                }
+            }
+        }
+
+        return 0;
+     
     }
 
 
