@@ -512,6 +512,70 @@ public class LearningGraph {
         return 0;
      
     }
+    
+    
+    public List<List<String>> findSequencesWordLadderII(String startWord, String targetWord, List<String> wordList) {
+
+
+        HashSet<String> wordSet = new HashSet<>();
+        for(String s : wordList){
+            wordSet.add(s);
+        }
+
+        List<List<String>> ans = new ArrayList<>();
+
+        Queue<List<String>> que = new LinkedList<>();
+        que.add(new ArrayList<>(Arrays.asList(startWord)));
+
+        HashSet<String> visitSet = new HashSet<>();
+        visitSet.add(startWord);
+
+        while(!que.isEmpty()){
+            
+            int levelCount = que.size();
+
+            while(levelCount --> 0){
+                List<String> list = que.poll();
+                String str = list.get(list.size()-1);
+
+                // if str is the targetWord
+                // do not need further searching
+                if(str.equals(targetWord)){
+                    ans.add(list);
+                    continue;
+                }
+
+                // Do convert each char of this string go get 
+                // string that is present in wordset
+                for(int i=0; i<str.length(); i++){
+                    for(char c='a'; c<='z'; c++){
+                        String newWord = str.substring(0, i) + c + str.substring(i+1);
+                        if(!wordSet.contains(newWord)){
+                            continue;
+                        }
+
+                        List<String> newList = new ArrayList<>(list);
+                        newList.add(newWord);
+                        que.add(newList);
+                        visitSet.add(newWord);
+                    }
+                }
+            }
+
+            // iterate over visiteSet and remove all elements that is common
+            // in visitSet and wordSet
+            for(String s : visitSet){
+                if(wordSet.contains(s)){
+                    wordSet.remove(s);
+                }
+            }
+
+            visitSet.clear();
+        }
+
+        return ans;
+
+    }
 
 
 
